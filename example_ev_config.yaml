@@ -1,0 +1,173 @@
+# Example EMHASS Configuration with EV Charging Extension
+# This file shows how to configure EMHASS for EV charging optimization
+
+## Basic EMHASS Configuration
+# These are standard EMHASS parameters - keep your existing values
+set_use_battery: true
+set_use_pv: true
+number_of_deferrable_loads: 2
+
+## Standard Deferrable Loads (existing functionality)
+nominal_power_of_deferrable_loads: [3000, 750] # Dishwasher: 3kW, Heat pump: 750W
+operating_hours_of_each_deferrable_load: [2, 8] # Dishwasher: 2h, Heat pump: 8h
+treat_deferrable_load_as_semi_cont: [true, false]
+set_deferrable_load_single_constant: [true, false]
+
+## NEW: EV Charging Configuration
+## =================================
+
+# Number of EVs to optimize (0 = disabled, 1+ = enable EV optimization)
+number_of_ev_loads: 2
+
+# EV Battery Capacities in Wh (60kWh and 75kWh examples)
+ev_battery_capacity: [60000, 75000]
+
+# EV Charging Efficiency (90% and 85% examples)
+ev_charging_efficiency: [0.9, 0.85]
+
+# Maximum EV Charging Power in Watts
+# EV1: 7.4kW Level 2 charger, EV2: 11kW Level 2 charger
+ev_nominal_charging_power: [7400, 11000]
+
+# Minimum EV Charging Power in Watts (when active)
+# EV1: 1.38kW minimum, EV2: 2kW minimum
+ev_minimum_charging_power: [1380, 2000]
+
+## Example Runtime Parameters (passed via API calls)
+## =================================================
+
+# These parameters would be passed when calling the optimization:
+
+# EV Availability Schedule (0=disconnected, 1=connected)
+# Example for daily commuter (EV1) and weekend car (EV2):
+# EV1 available: 6PM-8AM (work commute pattern)
+# EV2 available: 8PM-6AM (leisure/weekend pattern)
+#
+# ev_availability: [
+#   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],  # EV1: hours 0-23
+#   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1]   # EV2: hours 0-23
+# ]
+
+# Minimum SOC Requirements at each timestep (0-1 scale)
+# Example: EV1 needs 80% by 7AM, EV2 needs 60% by 9AM
+#
+# ev_minimum_soc_schedule: [
+#   [0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.2,0.2,0.2,0.2,0.2],  # EV1
+#   [0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.3,0.3,0.3,0.3]   # EV2
+# ]
+
+# Initial SOC when optimization starts (0-1 scale)
+# ev_initial_soc: [0.15, 0.35]  # EV1 at 15%, EV2 at 35%
+
+## Integration with Existing Systems
+## =================================
+
+# EV charging integrates with existing EMHASS features:
+# - Battery storage optimization (charge EV when battery is full)
+# - PV production (charge EV with excess solar)
+# - Time-of-use electricity rates (charge during cheap periods)
+# - Grid constraints (respect maximum power from grid)
+
+# Example electricity rates (EUR/kWh)
+load_cost_forecast:
+  [
+    0.25,
+    0.22,
+    0.20,
+    0.18,
+    0.15,
+    0.12,
+    0.10,
+    0.15,
+    0.20,
+    0.25,
+    0.30,
+    0.28,
+    0.25,
+    0.22,
+    0.24,
+    0.28,
+    0.32,
+    0.35,
+    0.40,
+    0.38,
+    0.35,
+    0.32,
+    0.30,
+    0.28,
+  ]
+## Real-World Use Cases
+## ====================
+
+# Case 1: Daily Commuter
+# - Plug in at 6 PM when arriving from work
+# - Need 80% charge by 7 AM for next day's commute
+# - Optimize around time-of-use rates (cheap after 11 PM)
+
+# Case 2: Multi-EV Household
+# - Two EVs with different schedules and requirements
+# - Load balancing to avoid exceeding grid connection limit
+# - Coordinate with home battery and solar panels
+
+# Case 3: Flexible Schedule
+# - EV availability varies daily (work from home, travel, etc.)
+# - SOC requirements change (local trips vs long distance)
+# - Update availability and SOC schedule via API calls
+
+## API Usage Examples
+## ==================
+
+# Day-ahead optimization with EV:
+# POST /action/dayahead-optim
+# {
+#   "ev_availability": [[1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],
+#   "ev_minimum_soc_schedule": [[0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.2,0.2,0.2,0.2]],
+#   "ev_initial_soc": [0.15],
+#   "prediction_horizon": 24
+# }
+
+# MPC optimization (shorter horizon, frequent updates):
+# POST /action/naive-mpc-optim
+# {
+#   "ev_availability": [[1,1,1,1]],
+#   "ev_minimum_soc_schedule": [[0.2,0.25,0.3,0.35]],
+#   "ev_initial_soc": [0.2],
+#   "prediction_horizon": 4
+# }
+
+## Benefits of This Approach
+## =========================
+
+# 1. Realistic EV Modeling:
+#    - Tracks actual battery SOC over time
+#    - Accounts for charging efficiency losses
+#    - Respects when EV is actually plugged in
+
+# 2. Flexible Scheduling:
+#    - Different requirements for weekdays vs weekends
+#    - Adapts to changing travel plans
+#    - Multiple EVs with independent schedules
+
+# 3. Full Integration:
+#    - Works with existing PV + battery optimization
+#    - Considers time-of-use electricity rates
+#    - Respects grid connection limits
+
+# 4. Cost Optimization:
+#    - Charges during cheapest electricity periods
+#    - Uses excess solar production when available
+#    - Coordinates with home battery to minimize costs
+
+## Configuration Notes
+## ===================
+
+# - Start with number_of_ev_loads: 0 to disable EV optimization
+# - Add one EV at a time to test configuration
+# - Adjust battery capacity and charging power for your specific EV
+# - Use realistic charging efficiency values (typically 85-95%)
+# - Test with different availability patterns to match your usage
+
+# For help with configuration:
+# - See example_ev_optimization.py for code examples
+# - See EV_CHARGING_EXTENSION_DESIGN.md for technical details
+# - Monitor optimization results to verify correct behavior
