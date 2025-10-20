@@ -3,7 +3,7 @@ configuration:
     name: Configuration Path
     description: Path where EMHASS configuration files are stored
   data_path:
-    name: Data Path  
+    name: Data Path
     description: Path where EMHASS data files are stored
   costfun:
     name: Cost Function

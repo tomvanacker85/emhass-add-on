@@ -9,12 +9,14 @@ This add-on provides **EMHASS (Energy Management for Home Assistant) with EV Cha
 ## Key Features
 
 ### 🏠 **Home Energy Management**
+
 - Solar PV optimization
-- Home battery management  
+- Home battery management
 - Grid interaction optimization
 - Deferrable load scheduling
 
 ### 🚗 **EV Charging Optimization** (NEW!)
+
 - **Smart Scheduling**: Charge during optimal times (low cost, high solar)
 - **SOC Management**: Ensure minimum charge levels when needed
 - **Multi-EV Support**: Handle multiple vehicles with different patterns
@@ -24,26 +26,37 @@ This add-on provides **EMHASS (Energy Management for Home Assistant) with EV Cha
 ## Configuration
 
 ### Basic Setup
+
 1. Install the add-on
 2. Configure your EV parameters
 3. Start the add-on
 4. Access the web interface at port 5001
 
 ### EV Configuration Example
+
 ```yaml
 number_of_ev_loads: 1
-ev_battery_capacity: '[60000]'          # 60 kWh = 60,000 Wh
-ev_charging_efficiency: '[0.9]'         # 90% charging efficiency
-ev_nominal_charging_power: '[7400]'     # 7.4 kW charger
-ev_minimum_charging_power: '[1380]'     # 1.38 kW minimum power
+ev_battery_capacity: "[60000]" # 60 kWh = 60,000 Wh
+ev_charging_efficiency: "[0.9]" # 90% charging efficiency
+ev_nominal_charging_power: "[7400]" # 7.4 kW charger
+ev_minimum_charging_power: "[1380]" # 1.38 kW minimum power
 ```
 
 ### Runtime Usage
+
 Pass EV schedules via API calls:
+
 ```json
 {
-  "ev_availability": [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1]],
-  "ev_minimum_soc_schedule": [[0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8]],
+  "ev_availability": [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
+  ],
+  "ev_minimum_soc_schedule": [
+    [
+      0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+      0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8
+    ]
+  ],
   "ev_initial_soc": [0.2]
 }
 ```
@@ -57,6 +70,7 @@ Pass EV schedules via API calls:
 ## Differences from Standard EMHASS
 
 This EV extension adds:
+
 - 5 new configuration parameters for EV setup
 - 3 new runtime parameters for dynamic EV control
 - EV power variables in optimization (P_EV0, P_EV1, etc.)
@@ -66,16 +80,19 @@ This EV extension adds:
 ## Use Cases
 
 ### Daily Commuter
+
 - Connect EV 6PM-8AM
 - Need 80% charge by 7AM
 - Optimize for lowest electricity rates
 
 ### Multi-EV Household
+
 - Different vehicles, different patterns
 - Coordinate charging to avoid peak demand
 - Balance with home battery and solar
 
 ### Weekend Trip Planning
+
 - Charge to 90% for long trips
 - Flexible timing over multiple days
 - Smart scheduling around other loads

@@ -6,9 +6,9 @@ slug: emhass-ev
 arch:
   - aarch64
   - amd64
-image: "ghcr.io/tomvanacker85/emhass-ev"  # Your custom image
+image: "ghcr.io/tomvanacker85/emhass-ev" # Your custom image
 ports:
-  5001/tcp: 5001  # Different port to avoid conflicts
+  5001/tcp: 5001 # Different port to avoid conflicts
 ports_description:
   5001/tcp: Web interface and API (EV Extension)
 webui: http://[HOST]:[PORT:5001]
@@ -35,12 +35,12 @@ options:
   battery_minimum_state_of_charge: 0.3
   battery_maximum_state_of_charge: 0.9
   battery_target_state_of_charge: 0.6
-  
+
   # Deferrable loads (keep existing functionality)
   number_of_deferrable_loads: 0
   nominal_power_of_deferrable_loads: "[]"
   operating_hours_of_each_deferrable_load: "[]"
-  
+
   # NEW: EV Extension Parameters
   number_of_ev_loads: 0
   ev_battery_capacity: "[]"
@@ -64,12 +64,12 @@ schema:
   battery_minimum_state_of_charge: float(0.0,0.5)?
   battery_maximum_state_of_charge: float(0.5,1.0)?
   battery_target_state_of_charge: float(0.0,1.0)?
-  
+
   # Deferrable loads schema
   number_of_deferrable_loads: int(0,10)?
   nominal_power_of_deferrable_loads: str?
   operating_hours_of_each_deferrable_load: str?
-  
+
   # EV Extension Schema
   number_of_ev_loads: int(0,5)?
   ev_battery_capacity: str?

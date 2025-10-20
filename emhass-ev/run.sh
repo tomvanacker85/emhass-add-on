@@ -12,10 +12,10 @@ mkdir -p "${CONFIG_PATH}"
 # Read Home Assistant add-on options
 if [ -f "/data/options.json" ]; then
     echo "📝 Reading add-on configuration..."
-    
+
     # Extract configuration values
     CONFIG_ENTRIES=$(jq -r 'to_entries[] | "\(.key)=\(.value)"' /data/options.json)
-    
+
     # Export as environment variables for EMHASS
     while IFS='=' read -r key value; do
         export "EMHASS_${key^^}"="${value}"

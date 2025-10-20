@@ -1,7 +1,7 @@
 configuration:
   server_ip:
-   name: server_ip, binds the webserver server to an ip address/range
-   description: default 0.0.0.0, which sallows the server to listen to all network interfaces accessible inside the docker container
+    name: server_ip, binds the webserver server to an ip address/range
+    description: default 0.0.0.0, which sallows the server to listen to all network interfaces accessible inside the docker container
   hass_url:
     name: URL, the Home Assistant instance
     description: hass_url (Default "empty").If using the supervisor (this Home Assistant) you can leave this to the default "empty" value. Otherwise enter the URL (Ex. http://localhost:8123/) of your external Home Assistant instance.
@@ -32,3 +32,18 @@ configuration:
   solar_forecast_kwp:
     name: optional_solar_forecast_kwp,int value for PV peak installed power in KW. (weather_forecast_method=solar.forecast)
     description: optional_solar_forecast_kwp (Default 0). The PV peak installed power in kW used for the 'solar.forecast' API call
+  number_of_ev_loads:
+    name: Number of EV loads to optimize
+    description: number_of_ev_loads (Default 0). Define the number of electric vehicles to include in the optimization
+  ev_battery_capacity:
+    name: EV battery capacity array in Wh
+    description: ev_battery_capacity. JSON array of battery capacities in Wh for each EV. Example "[60000, 75000]" for two EVs with 60kWh and 75kWh batteries
+  ev_charging_efficiency:
+    name: EV charging efficiency array
+    description: ev_charging_efficiency. JSON array of charging efficiencies (0-1) for each EV. Example "[0.9, 0.85]" for 90% and 85% efficiency
+  ev_nominal_charging_power:
+    name: Maximum EV charging power array in W
+    description: ev_nominal_charging_power. JSON array of maximum charging power in Watts for each EV. Example "[7400, 11000]" for 7.4kW and 11kW chargers
+  ev_minimum_charging_power:
+    name: Minimum EV charging power array in W
+    description: ev_minimum_charging_power. JSON array of minimum charging power in Watts for each EV when active. Example "[1380, 2000]" for minimum charging rates

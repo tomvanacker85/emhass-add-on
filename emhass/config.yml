@@ -36,3 +36,8 @@ schema:
   solcast_rooftop_id: "str?" #optional
   solar_forecast_kwp: "float?" #optional
   server_ip: "list(0.0.0.0|127.0.0.1)?" #optional
+  number_of_ev_loads: "int?" #optional
+  ev_battery_capacity: "str?" #optional - JSON array of EV battery capacities in Wh
+  ev_charging_efficiency: "str?" #optional - JSON array of EV charging efficiencies (0-1)
+  ev_nominal_charging_power: "str?" #optional - JSON array of max EV charging power in W
+  ev_minimum_charging_power: "str?" #optional - JSON array of min EV charging power in W
