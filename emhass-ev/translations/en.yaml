@@ -1,0 +1,67 @@
+configuration:
+  config_path:
+    name: Configuration Path
+    description: Path where EMHASS configuration files are stored
+  data_path:
+    name: Data Path  
+    description: Path where EMHASS data files are stored
+  costfun:
+    name: Cost Function
+    description: Optimization objective - cost minimization, profit maximization, or self-consumption
+  log_level:
+    name: Log Level
+    description: Logging verbosity level
+  optimization_time_step:
+    name: Optimization Time Step
+    description: Time step for optimization in minutes (30-120)
+  historic_days_to_retrieve:
+    name: Historic Days
+    description: Number of historic days to retrieve for forecasting (1-7)
+  method_ts_round:
+    name: Timestamp Rounding
+    description: Method for rounding timestamps
+  set_use_battery:
+    name: Use Battery
+    description: Enable battery optimization
+  battery_discharge_efficiency:
+    name: Battery Discharge Efficiency
+    description: Battery discharge efficiency (0.1-1.0)
+  battery_charge_efficiency:
+    name: Battery Charge Efficiency
+    description: Battery charge efficiency (0.1-1.0)
+  battery_nominal_energy_capacity:
+    name: Battery Capacity
+    description: Battery nominal energy capacity in Wh
+  battery_minimum_state_of_charge:
+    name: Battery Min SOC
+    description: Minimum allowable battery state of charge (0.0-0.5)
+  battery_maximum_state_of_charge:
+    name: Battery Max SOC
+    description: Maximum allowable battery state of charge (0.5-1.0)
+  battery_target_state_of_charge:
+    name: Battery Target SOC
+    description: Target battery state of charge (0.0-1.0)
+  number_of_deferrable_loads:
+    name: Number of Deferrable Loads
+    description: Number of deferrable loads to optimize (0-10)
+  nominal_power_of_deferrable_loads:
+    name: Deferrable Load Powers
+    description: JSON array of nominal powers for deferrable loads in Watts
+  operating_hours_of_each_deferrable_load:
+    name: Deferrable Load Hours
+    description: JSON array of operating hours for each deferrable load
+  number_of_ev_loads:
+    name: Number of EV Loads
+    description: Number of EV loads to optimize (0-5). Set to 0 to disable EV optimization.
+  ev_battery_capacity:
+    name: EV Battery Capacity
+    description: JSON array of battery capacities in Wh for each EV. Example "[60000, 75000]" for two EVs with 60kWh and 75kWh batteries
+  ev_charging_efficiency:
+    name: EV Charging Efficiency
+    description: JSON array of charging efficiencies (0.0-1.0) for each EV. Example "[0.9, 0.85]" for 90% and 85% efficiency
+  ev_nominal_charging_power:
+    name: EV Maximum Charging Power
+    description: JSON array of maximum charging powers in Watts for each EV. Example "[7400, 11000]" for 7.4kW and 11kW chargers
+  ev_minimum_charging_power:
+    name: EV Minimum Charging Power
+    description: JSON array of minimum charging powers in Watts for each EV (when actively charging). Example "[1380, 2000]" for 1.38kW and 2kW minimums

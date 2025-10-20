@@ -1,0 +1,8 @@
+# Use Home Assistant base image
+build_from:
+  aarch64: ghcr.io/home-assistant/aarch64-base:3.18
+  amd64: ghcr.io/home-assistant/amd64-base:3.18
+
+# Build arguments
+args:
+  emhass_version: "feature/ev-charging-extension"
