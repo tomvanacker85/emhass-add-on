@@ -3,7 +3,7 @@ set -e
 
 # EMHASS EV Extension Run Script
 
-echo "🚗 Starting EMHASS EV Extension v1.0.4..."
+echo "🚗 Starting EMHASS EV Extension v1.0.9..."
 
 # Set up configuration paths for EV extension
 CONFIG_PATH="/share/emhass-ev"
@@ -32,24 +32,21 @@ echo "🔧 EV Extension configuration loaded"
 echo "📡 Port: ${EMHASS_PORT}"
 echo "📁 Config path: ${CONFIG_PATH}"
 
-# Start EMHASS with EV extension
+# Find and start EMHASS using the original approach
 echo "🚀 Starting EMHASS EV web server..."
 
-# Try to find the correct Python executable
-if command -v python3 >/dev/null 2>&1; then
-    echo "Using python3"
-    exec python3 -m emhass.web_server --port "${EMHASS_PORT}"
-elif command -v python >/dev/null 2>&1; then
-    echo "Using python"
-    exec python -m emhass.web_server --port "${EMHASS_PORT}"
-elif command -v /usr/local/bin/python3 >/dev/null 2>&1; then
-    echo "Using /usr/local/bin/python3"
-    exec /usr/local/bin/python3 -m emhass.web_server --port "${EMHASS_PORT}"
+# Try to use the original EMHASS startup script if it exists
+if [ -f "/usr/bin/run.sh" ]; then
+    echo "Using original EMHASS run script"
+    exec /usr/bin/run.sh
+elif [ -f "/app/run.sh" ]; then
+    echo "Using app run script"
+    exec /app/run.sh
 else
-    echo "🔍 Searching for Python executable..."
-    find /usr -name "python*" -type f 2>/dev/null | head -5
-    echo "Available in PATH:"
-    which python python3 2>/dev/null || echo "No python found in PATH"
-    echo "❌ No Python executable found!"
-    exit 1
+    # Fallback: try to start EMHASS directly
+    echo "Starting EMHASS directly..."
+    cd /app 2>/dev/null || cd /
+    exec emhass --action web-server --port "${EMHASS_PORT}" 2>/dev/null || \
+    exec /usr/local/bin/emhass --action web-server --port "${EMHASS_PORT}" 2>/dev/null || \
+    echo "❌ Could not start EMHASS web server"
 fi

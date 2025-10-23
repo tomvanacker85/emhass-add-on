@@ -8,11 +8,12 @@ ENV EMHASS_PORT="5003"
 ENV EMHASS_CONFIG_PATH="/share/emhass-ev"
 ENV EMHASS_DATA_PATH="/share/emhass-ev"
 
+# Create the EV data directory
+RUN mkdir -p /share/emhass-ev
+
 # Copy custom run script
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
-# EV functionality will be provided via configuration and API
-# This maintains compatibility while adding EV capabilities
-
+# Use our custom run script that tries to find the original EMHASS startup
 ENTRYPOINT ["/run.sh"]
