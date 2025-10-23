@@ -39,16 +39,11 @@ if [ ! -f "${CONFIG_PATH}/config.json" ]; then
     fi
 fi
 
-# Set up EV web interface integration
-echo "🌐 Setting up Integrated EV configuration..."
-if [ -f "/app/setup_ev_integrated.sh" ]; then
-    chmod +x /app/setup_ev_integrated.sh
-    /app/setup_ev_integrated.sh
-fi
-
-if [ -f "/app/setup_ev_definitions_robust.sh" ]; then
-    chmod +x /app/setup_ev_definitions_robust.sh
-    /app/setup_ev_definitions_robust.sh
+# Set up EV web interface with enhanced form and YAML support
+echo "🌐 Setting up Enhanced EV configuration..."
+if [ -f "/app/setup_ev_enhanced.sh" ]; then
+    chmod +x /app/setup_ev_enhanced.sh
+    /app/setup_ev_enhanced.sh
 fi
 
 echo "🔧 EV Extension configuration loaded"
