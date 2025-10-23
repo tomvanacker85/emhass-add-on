@@ -1,0 +1,74 @@
+{
+  "params": {
+    "passed_data": {
+      "pv_power_forecasts": [0,0,0,0,0,0,0,0,0,40,70,250,660,1110,1490,1660,1810,1500,1110,755,540,320,180,40],
+      "load_power_forecasts": [478,398,397,456,398,377,442,463,503,507,544,553,599,630,675,668,667,669,684,725,677,612,533,468],
+      "load_cost_forecasts": [0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25],
+      "prod_price_forecasts": [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05]
+    },
+    "retrieve_hass_conf": {
+      "hass_url": "http://supervisor/core/api",
+      "long_lived_token": "your_long_lived_token_here",
+      "time_zone": "Europe/Paris",
+      "lat": 45.83,
+      "lon": 6.86,
+      "alt": 4807.8,
+      "sensor_power_photovoltaics": "sensor.power_photovoltaics",
+      "sensor_power_load_no_var_loads": "sensor.power_load_no_var_loads",
+      "sensor_linear_interp": [
+        "sensor.power_photovoltaics",
+        "sensor.power_load_no_var_loads"
+      ],
+      "method_ts_round": "first"
+    },
+    "optim_conf": {
+      "num_def_loads": 2,
+      "P_deferrable_nom": [3000.0,750.0],
+      "def_total_hours": [5,8],
+      "treat_def_as_semi_cont": [false,false],
+      "set_def_constant": [false,false],
+      "weather_forecast_method": "csv",
+      "load_forecast_method": "csv",
+      "load_cost_forecast_method": "hp_hc_periods",
+      "list_hp_periods": [{"period_hp_1":{"start":"02:54","end":"15:24"}},{"period_hp_2":{"start":"17:24","end":"20:24"}}],
+      "load_cost_hp": 0.1907,
+      "load_cost_hc": 0.1419,
+      "photovoltaic_power_forecast": "csv",
+      "prediction_horizon": 10,
+      "soc_init": 0.5,
+      "soc_final": 0.6,
+      "def_start_timestep": [0,0],
+      "def_end_timestep": [0,0],
+      "alpha": 1,
+      "beta": 0,
+      "weight_battery_discharge": 0,
+      "weight_battery_charge": 0
+    },
+    "plant_conf": {
+      "P_grid_max": 9000.0,
+      "P_from_grid_max": 9000.0,
+      "module_model": ["CSUN_Eurasia_Energy_Systems_CSUN295_60M"],
+      "inverter_model": ["Fronius_International_GmbH__Fronius_Primo_3_0_1_208_240__240V_"],
+      "surface_tilt": [30],
+      "surface_azimuth": [205],
+      "modules_per_string": [16],
+      "strings_per_inverter": [1],
+      "Pd_max": 1000.0,
+      "Pc_max": 1000.0,
+      "eta_disch": 0.95,
+      "eta_ch": 0.95,
+      "Enom": 5000.0,
+      "SOCmin": 0.3,
+      "SOCmax": 0.9,
+      "SOCtarget": 0.6
+    },
+    "ev_conf": {
+      "number_of_ev_loads": 1,
+      "ev_battery_capacity": [75000],
+      "ev_charging_efficiency": [0.9],
+      "ev_nominal_charging_power": [11000],
+      "ev_minimum_charging_power": [1380],
+      "ev_consumption_efficiency": [0.2]
+    }
+  }
+}

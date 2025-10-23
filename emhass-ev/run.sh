@@ -3,7 +3,7 @@ set -e
 
 # EMHASS EV Extension Run Script
 
-echo "🚗 Starting EMHASS EV Extension v1.1.3..."
+echo "🚗 Starting EMHASS EV Extension v1.2.0..."
 
 # Set up configuration paths for EV extension
 CONFIG_PATH="/share/emhass-ev"
@@ -27,6 +27,23 @@ fi
 export EMHASS_PORT="${EMHASS_PORT:-5003}"
 export EMHASS_CONFIG_PATH="${CONFIG_PATH}"
 export EMHASS_DATA_PATH="${CONFIG_PATH}"
+
+# Set up EV configuration defaults
+if [ ! -f "${CONFIG_PATH}/config.json" ]; then
+    echo "📝 Creating EV configuration defaults..."
+    
+    # Copy EV-specific config defaults if available
+    if [ -f "/app/config_defaults_ev.json" ]; then
+        cp /app/config_defaults_ev.json "${CONFIG_PATH}/config.json"
+        echo "✅ EV configuration defaults created"
+    fi
+fi
+
+# Set up EV web interface extension
+if [ -f "/app/setup_ev_web.sh" ]; then
+    echo "🌐 Setting up EV web interface extension..."
+    /app/setup_ev_web.sh
+fi
 
 echo "🔧 EV Extension configuration loaded"
 echo "📡 Port: ${EMHASS_PORT}"

@@ -3,17 +3,24 @@
 
 FROM ghcr.io/davidusb-geek/emhass:latest
 
-# Set EV-specific configuration
+# Set EV-specific environment variables
 ENV EMHASS_PORT="5003"
 ENV EMHASS_CONFIG_PATH="/share/emhass-ev"
 ENV EMHASS_DATA_PATH="/share/emhass-ev"
 
-# Create the EV data directory
+# Create EV data directory
 RUN mkdir -p /share/emhass-ev
 
-# Copy custom run script
+# Copy EV-specific configuration files
+COPY config_defaults_ev.json /app/config_defaults_ev.json
+COPY ev_config_extension.js /app/ev_config_extension.js
+COPY ev_config_simple.js /app/ev_config_simple.js
+COPY ev_configuration.html /app/ev_configuration.html
+COPY setup_ev_web.sh /app/setup_ev_web.sh
+
+# Copy custom startup script
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
+RUN chmod +x /app/setup_ev_web.sh
 
-# Use our custom run script that tries to find the original EMHASS startup
 ENTRYPOINT ["/run.sh"]
