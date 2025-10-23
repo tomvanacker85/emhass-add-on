@@ -16,11 +16,13 @@ COPY config_defaults_ev.json /app/config_defaults_ev.json
 COPY ev_config_extension.js /app/ev_config_extension.js
 COPY ev_config_simple.js /app/ev_config_simple.js
 COPY ev_configuration.html /app/ev_configuration.html
-COPY setup_ev_web.sh /app/setup_ev_web.sh
+COPY setup_ev_integrated.sh /app/setup_ev_integrated.sh
+COPY setup_ev_definitions_robust.sh /app/setup_ev_definitions_robust.sh
 
 # Copy custom startup script
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
-RUN chmod +x /app/setup_ev_web.sh
+RUN chmod +x /app/setup_ev_integrated.sh
+RUN chmod +x /app/setup_ev_definitions_robust.sh
 
 ENTRYPOINT ["/run.sh"]

@@ -11,13 +11,13 @@
             <div class="config-description">
                 Configure EV charging parameters and consumption patterns. These settings define how EMHASS optimizes EV charging schedules.
             </div>
-            
+
             <div class="form-group">
                 <label for="number_of_ev_loads">
                     Number of EV Loads:
                     <span class="help-text">Number of electric vehicles to optimize (0 = disabled)</span>
                 </label>
-                <input type="number" id="number_of_ev_loads" name="number_of_ev_loads" 
+                <input type="number" id="number_of_ev_loads" name="number_of_ev_loads"
                        min="0" max="5" value="1" class="form-control">
             </div>
 
@@ -26,7 +26,7 @@
                     Battery Capacity (Wh):
                     <span class="help-text">Battery capacity in Wh for each EV (e.g., [75000] for 75 kWh)</span>
                 </label>
-                <input type="text" id="ev_battery_capacity" name="ev_battery_capacity" 
+                <input type="text" id="ev_battery_capacity" name="ev_battery_capacity"
                        value="[75000]" class="form-control" placeholder="[75000]">
             </div>
 
@@ -35,7 +35,7 @@
                     Charging Efficiency:
                     <span class="help-text">Charging efficiency (0-1) for each EV (e.g., [0.9] for 90%)</span>
                 </label>
-                <input type="text" id="ev_charging_efficiency" name="ev_charging_efficiency" 
+                <input type="text" id="ev_charging_efficiency" name="ev_charging_efficiency"
                        value="[0.9]" class="form-control" placeholder="[0.9]">
             </div>
 
@@ -44,7 +44,7 @@
                     Nominal Charging Power (W):
                     <span class="help-text">Maximum charging power in W for each EV (e.g., [11000] for 11 kW)</span>
                 </label>
-                <input type="text" id="ev_nominal_charging_power" name="ev_nominal_charging_power" 
+                <input type="text" id="ev_nominal_charging_power" name="ev_nominal_charging_power"
                        value="[11000]" class="form-control" placeholder="[11000]">
             </div>
 
@@ -53,7 +53,7 @@
                     Minimum Charging Power (W):
                     <span class="help-text">Minimum charging power in W for each EV (e.g., [1380])</span>
                 </label>
-                <input type="text" id="ev_minimum_charging_power" name="ev_minimum_charging_power" 
+                <input type="text" id="ev_minimum_charging_power" name="ev_minimum_charging_power"
                        value="[1380]" class="form-control" placeholder="[1380]">
             </div>
 
@@ -62,7 +62,7 @@
                     Consumption Efficiency (kWh/km):
                     <span class="help-text">Energy consumption in kWh per km (e.g., [0.2] for 0.2 kWh/km)</span>
                 </label>
-                <input type="text" id="ev_consumption_efficiency" name="ev_consumption_efficiency" 
+                <input type="text" id="ev_consumption_efficiency" name="ev_consumption_efficiency"
                        value="[0.2]" class="form-control" placeholder="[0.2]">
             </div>
 
@@ -170,14 +170,14 @@
 
         // Find the configuration form or container
         const configContainer = document.querySelector('.configuration-container, .config-form, form, main');
-        
+
         if (configContainer) {
             // Insert EV configuration section
             configContainer.insertAdjacentHTML('beforeend', evConfigHTML);
-            
+
             // Load existing EV configuration if available
             loadEVConfiguration();
-            
+
             console.log('EV Configuration section added successfully');
         } else {
             console.warn('Configuration container not found, retrying in 1 second...');
@@ -190,7 +190,7 @@
         // Try to load from existing config
         if (window.configData && window.configData.params && window.configData.params.ev_conf) {
             const evConf = window.configData.params.ev_conf;
-            
+
             // Populate form fields
             document.getElementById('number_of_ev_loads').value = evConf.number_of_ev_loads || 1;
             document.getElementById('ev_battery_capacity').value = JSON.stringify(evConf.ev_battery_capacity || [75000]);
@@ -211,7 +211,7 @@
             ev_minimum_charging_power: JSON.parse(document.getElementById('ev_minimum_charging_power').value || '[1380]'),
             ev_consumption_efficiency: JSON.parse(document.getElementById('ev_consumption_efficiency').value || '[0.2]')
         };
-        
+
         return evConfig;
     }
 
@@ -219,17 +219,17 @@
     function hookConfigurationSave() {
         // Find save buttons and hook into their click events
         const saveButtons = document.querySelectorAll('button[type="submit"], .save-button, .btn-save');
-        
+
         saveButtons.forEach(button => {
             button.addEventListener('click', function(e) {
                 try {
                     const evConfig = collectEVConfiguration();
-                    
+
                     // Add EV configuration to the main config object
                     if (window.configData && window.configData.params) {
                         window.configData.params.ev_conf = evConfig;
                     }
-                    
+
                     console.log('EV Configuration collected:', evConfig);
                 } catch (error) {
                     console.error('Error collecting EV configuration:', error);

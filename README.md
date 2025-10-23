@@ -1,8 +1,35 @@
 <!-- markdown file presented on the main addon info tab -->
 
-# EMHASS Add-on
+# EMHASS Add-on Repository
 
-### A Home Assistant Add-on for the EMHASS module: Energy Management for Home Assistant
+### Home Assistant Add-ons for EMHASS: Energy Management for Home Assistant
+
+This repository contains multiple EMHASS add-ons:
+
+## 🚗 **EMHASS EV Extension** - *Featured Add-on*
+**Energy Management with Electric Vehicle Charging Optimization**
+
+- All standard EMHASS features (Solar PV, Battery, Load optimization)
+- **Smart EV Charging** with multi-vehicle support
+- **Distance-based energy planning** (kWh/100km)
+- **Dynamic SOC requirements** throughout the day
+- **Availability scheduling** for when EVs are connected
+- **Port 5003** - Dedicated EV optimization interface
+
+## 📊 **Standard EMHASS** 
+**Original Energy Management System**
+
+- Solar PV optimization
+- Home battery management
+- Deferrable load scheduling
+- **Port 5000** - Standard EMHASS interface
+
+## 🧪 **EMHASS Test**
+**Development and Testing Version**
+
+- Latest experimental features
+- Testing environment
+- **Port 5001** - Test interface
 
 </br>
 
@@ -44,9 +71,54 @@ For any Issues/Feature Requests for the EMHASS core module, create a new issue h
 </a>
 </div>
 
-## Installation
+## Installation in Home Assistant
 
-The steps to install EMHASS as an Home Assistant addon:
+### 🚀 **Quick Installation** (Recommended)
+
+1. **Add Repository to Home Assistant:**
+   ```
+   https://github.com/tomvanacker85/emhass-add-on
+   ```
+
+2. **In Home Assistant:**
+   - Go to **Settings** → **Add-ons** → **Add-on Store**
+   - Click the **⋮** (three dots) in the top right
+   - Select **"Repositories"**
+   - Add the URL above
+   - Click **"ADD"**
+
+3. **Install EMHASS EV Extension:**
+   - Find **"EMHASS EV Extension"** in the add-on store
+   - Click **"INSTALL"**
+   - Configure your EV parameters
+   - Click **"START"**
+
+4. **Access the Interface:**
+   ```
+   http://homeassistant.local:5003/
+   ```
+
+### ⚡ **EV Configuration Example**
+
+```yaml
+# Basic EV Setup (in add-on configuration)
+number_of_ev_loads: 1
+ev_battery_capacity: "[75000]"          # 75 kWh battery
+ev_charging_efficiency: "[0.9]"         # 90% charging efficiency  
+ev_nominal_charging_power: "[11000]"    # 11 kW charger
+ev_minimum_charging_power: "[1380]"     # 1.38 kW minimum
+ev_consumption_efficiency: "[20.0]"     # 20 kWh/100km
+```
+
+### 📊 **Multiple Add-ons Available**
+
+| Add-on | Port | Purpose | Status |
+|--------|------|---------|---------|
+| **EMHASS EV Extension** | **5003** | **EV + Energy Management** | **✅ Recommended** |
+| EMHASS Standard | 5000 | Original Energy Management | ✅ Stable |
+| EMHASS Test | 5001 | Development/Testing | 🧪 Experimental |
+
+## Links & Documentation
 
 1) Add the EMHASS-Add-on repository to the HAOS add-on store
 

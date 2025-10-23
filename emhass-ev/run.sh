@@ -3,7 +3,7 @@ set -e
 
 # EMHASS EV Extension Run Script
 
-echo "🚗 Starting EMHASS EV Extension v1.2.0..."
+echo "🚗 Starting EMHASS EV Extension v1.2.1..."
 
 # Set up configuration paths for EV extension
 CONFIG_PATH="/share/emhass-ev"
@@ -31,7 +31,7 @@ export EMHASS_DATA_PATH="${CONFIG_PATH}"
 # Set up EV configuration defaults
 if [ ! -f "${CONFIG_PATH}/config.json" ]; then
     echo "📝 Creating EV configuration defaults..."
-    
+
     # Copy EV-specific config defaults if available
     if [ -f "/app/config_defaults_ev.json" ]; then
         cp /app/config_defaults_ev.json "${CONFIG_PATH}/config.json"
@@ -39,10 +39,16 @@ if [ ! -f "${CONFIG_PATH}/config.json" ]; then
     fi
 fi
 
-# Set up EV web interface extension
-if [ -f "/app/setup_ev_web.sh" ]; then
-    echo "🌐 Setting up EV web interface extension..."
-    /app/setup_ev_web.sh
+# Set up EV web interface integration
+echo "🌐 Setting up Integrated EV configuration..."
+if [ -f "/app/setup_ev_integrated.sh" ]; then
+    chmod +x /app/setup_ev_integrated.sh
+    /app/setup_ev_integrated.sh
+fi
+
+if [ -f "/app/setup_ev_definitions_robust.sh" ]; then
+    chmod +x /app/setup_ev_definitions_robust.sh
+    /app/setup_ev_definitions_robust.sh
 fi
 
 echo "🔧 EV Extension configuration loaded"
@@ -55,21 +61,21 @@ echo "🚀 Starting EMHASS EV web server..."
 # Check if uv is available (the proper way to run EMHASS)
 if command -v uv >/dev/null 2>&1; then
     echo "✅ Found uv package manager"
-    
+
     # Set up the proper environment variables for EMHASS
     export EMHASS_HOST="0.0.0.0"
     export EMHASS_PORT="${EMHASS_PORT:-5003}"
     export EMHASS_CONFIG_PATH="${EMHASS_CONFIG_PATH:-/share/emhass-ev}"
     export EMHASS_DATA_PATH="${EMHASS_DATA_PATH:-/share/emhass-ev}"
-    
+
     echo "🔧 Starting EMHASS EV web server on port $EMHASS_PORT..."
-    
+
     # Use the same command as the original EMHASS image but with EV-specific settings
     cd /app
     exec uv run --frozen gunicorn "emhass.web_server:create_app()" --bind "0.0.0.0:${EMHASS_PORT}" --workers 1 --timeout 120
 else
     echo "❌ uv package manager not found"
-    
+
     # Try to use the original EMHASS startup script if it exists
     if [ -f "/usr/bin/run.sh" ]; then
         echo "Using original EMHASS run script"
@@ -80,12 +86,12 @@ else
     else
         # Fallback: try to start EMHASS directly with various methods
         echo "Starting EMHASS directly..."
-        
+
         # Check what's available
         echo "🔍 Available EMHASS executables:"
         find /usr -name "*emhass*" -type f 2>/dev/null | head -3
         find /app -name "*emhass*" -type f 2>/dev/null | head -3
-        
+
         # Try different startup methods
         if [ -f "/usr/local/bin/python3" ]; then
             echo "Trying Python3 module execution..."

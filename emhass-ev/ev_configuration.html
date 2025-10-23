@@ -12,7 +12,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
-        
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -21,18 +21,18 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #4a90e2, #6bb6ff);
             color: white;
             padding: 30px;
             text-align: center;
         }
-        
+
         .content {
             padding: 30px;
         }
-        
+
         .ev-config-section {
             background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
             border: 2px solid #4a90e2;
@@ -40,18 +40,18 @@
             padding: 20px;
             margin: 20px 0;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         .form-group label {
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
             color: #333;
         }
-        
+
         .help-text {
             display: block;
             font-size: 0.9em;
@@ -59,7 +59,7 @@
             font-weight: normal;
             margin-top: 2px;
         }
-        
+
         .form-control {
             width: 100%;
             padding: 10px;
@@ -68,13 +68,13 @@
             box-sizing: border-box;
             font-size: 14px;
         }
-        
+
         .form-control:focus {
             border-color: #4a90e2;
             outline: none;
             box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
         }
-        
+
         .btn {
             padding: 12px 24px;
             border: none;
@@ -84,17 +84,17 @@
             font-weight: bold;
             transition: all 0.2s;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, #4a90e2, #6bb6ff);
             color: white;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
         }
-        
+
         .ev-info {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
@@ -102,20 +102,20 @@
             padding: 15px;
             margin-top: 20px;
         }
-        
+
         .status {
             padding: 10px;
             border-radius: 4px;
             margin: 10px 0;
             font-weight: bold;
         }
-        
+
         .status.success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        
+
         .status.error {
             background: #f8d7da;
             color: #721c24;
@@ -129,14 +129,14 @@
             <h1>🚗 EMHASS EV Configuration</h1>
             <p>Configure Electric Vehicle parameters for optimal charging optimization</p>
         </div>
-        
+
         <div class="content">
             <div id="status"></div>
-            
+
             <div class="ev-config-section">
                 <h3>Electric Vehicle Configuration</h3>
                 <p>These settings define how EMHASS optimizes EV charging schedules based on your vehicle specifications and charging infrastructure.</p>
-                
+
                 <form id="ev-config-form">
                     <div class="form-group">
                         <label for="number_of_ev_loads">
@@ -145,7 +145,7 @@
                         </label>
                         <input type="number" id="number_of_ev_loads" min="0" max="5" value="1" class="form-control">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="ev_battery_capacity">
                             Battery Capacity (Wh):
@@ -153,7 +153,7 @@
                         </label>
                         <input type="text" id="ev_battery_capacity" value="[75000]" class="form-control">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="ev_charging_efficiency">
                             Charging Efficiency:
@@ -161,7 +161,7 @@
                         </label>
                         <input type="text" id="ev_charging_efficiency" value="[0.9]" class="form-control">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="ev_nominal_charging_power">
                             Nominal Charging Power (W):
@@ -169,7 +169,7 @@
                         </label>
                         <input type="text" id="ev_nominal_charging_power" value="[11000]" class="form-control">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="ev_minimum_charging_power">
                             Minimum Charging Power (W):
@@ -177,7 +177,7 @@
                         </label>
                         <input type="text" id="ev_minimum_charging_power" value="[1380]" class="form-control">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="ev_consumption_efficiency">
                             Consumption Efficiency (kWh/km):
@@ -185,11 +185,11 @@
                         </label>
                         <input type="text" id="ev_consumption_efficiency" value="[0.2]" class="form-control">
                     </div>
-                    
+
                     <button type="submit" class="btn btn-primary">💾 Save EV Configuration</button>
                 </form>
             </div>
-            
+
             <div class="ev-info">
                 <h4>💡 Configuration Tips</h4>
                 <ul>
@@ -200,13 +200,13 @@
                     <li><strong>Efficiency:</strong> Modern EVs typically have 85-95% charging efficiency</li>
                 </ul>
             </div>
-            
+
             <div style="text-align: center; margin-top: 30px;">
                 <a href="/" class="btn btn-primary">🏠 Back to EMHASS</a>
             </div>
         </div>
     </div>
-    
+
     <script>
         function showStatus(message, type) {
             const statusDiv = document.getElementById('status');
@@ -215,7 +215,7 @@
                 statusDiv.innerHTML = '';
             }, 5000);
         }
-        
+
         function loadCurrentConfig() {
             // Try to load current configuration
             fetch('/config')
@@ -237,10 +237,10 @@
                     showStatus('ℹ️ Using default EV configuration values', 'success');
                 });
         }
-        
+
         document.getElementById('ev-config-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             try {
                 const evConfig = {
                     number_of_ev_loads: parseInt(document.getElementById('number_of_ev_loads').value),
@@ -250,27 +250,27 @@
                     ev_minimum_charging_power: JSON.parse(document.getElementById('ev_minimum_charging_power').value),
                     ev_consumption_efficiency: JSON.parse(document.getElementById('ev_consumption_efficiency').value)
                 };
-                
+
                 // Validate the configuration
                 if (evConfig.number_of_ev_loads < 0 || evConfig.number_of_ev_loads > 5) {
                     throw new Error('Number of EV loads must be between 0 and 5');
                 }
-                
+
                 // Show success message
                 showStatus('✅ EV Configuration validated and ready for deployment!', 'success');
-                
+
                 // In a real implementation, this would save to the EMHASS config system
                 console.log('EV Configuration:', evConfig);
-                
+
                 // You could also display the JSON for manual copying:
                 const configJson = JSON.stringify(evConfig, null, 2);
                 console.log('EV Config JSON:', configJson);
-                
+
             } catch (error) {
                 showStatus('❌ Configuration error: ' + error.message, 'error');
             }
         });
-        
+
         // Load current configuration on page load
         loadCurrentConfig();
     </script>

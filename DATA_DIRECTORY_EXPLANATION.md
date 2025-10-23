@@ -5,8 +5,9 @@
 The `/share/emhass-enhanced` directory will **only be created when the add-on starts** for the first time. Here's why:
 
 ### **Directory Creation Timeline**
+
 1. **Before Installation**: Directory doesn't exist ❌
-2. **During Add-on Installation**: Directory still doesn't exist ❌  
+2. **During Add-on Installation**: Directory still doesn't exist ❌
 3. **When Add-on Starts**: Directory gets created ✅
 4. **After First Run**: Directory persists ✅
 
@@ -17,6 +18,7 @@ I've added a **custom run script** that ensures the directory is created:
 ### **Enhanced EMHASS Add-on Now Includes:**
 
 #### **`run.sh` Script**
+
 ```bash
 # Creates the enhanced data directory
 DATA_PATH="/share/emhass-enhanced"
@@ -29,6 +31,7 @@ export EMHASS_CONFIG_PATH="${DATA_PATH}"
 ```
 
 #### **Custom Dockerfile**
+
 ```dockerfile
 # Builds from original EMHASS + enhancements
 FROM ghcr.io/davidusb-geek/emhass:latest
@@ -38,7 +41,8 @@ ENV EMHASS_DATA_PATH="/share/emhass-enhanced"
 
 ## 🚀 **What Happens During Installation**
 
-### **Step 1: Add-on Installation** 
+### **Step 1: Add-on Installation**
+
 ```bash
 # Add repository: https://github.com/tomvanacker85/emhass-add-on
 # Install "EMHASS" add-on
@@ -47,6 +51,7 @@ ENV EMHASS_DATA_PATH="/share/emhass-enhanced"
 ```
 
 ### **Step 2: Add-on First Start**
+
 ```bash
 # Start the add-on in Home Assistant
 # run.sh executes and creates /share/emhass-enhanced
@@ -55,6 +60,7 @@ ENV EMHASS_DATA_PATH="/share/emhass-enhanced"
 ```
 
 ### **Step 3: Verification**
+
 ```bash
 # Check Home Assistant file system
 ls -la /share/
@@ -69,6 +75,7 @@ ls -la /share/
 ### **After Installing & Starting the Add-on:**
 
 #### **1. Check Add-on Logs**
+
 ```bash
 # In Home Assistant > Add-ons > EMHASS > Logs
 # Look for:
@@ -76,13 +83,15 @@ ls -la /share/
 "🚀 Starting Enhanced EMHASS..."
 ```
 
-#### **2. Check File System** 
+#### **2. Check File System**
+
 ```bash
 # In Home Assistant > Settings > System > Hardware
 # Navigate to /share/ and look for emhass-enhanced folder
 ```
 
 #### **3. Test Web Interface**
+
 ```bash
 # Access: http://homeassistant:5001
 # Should show EMHASS interface using enhanced data path
@@ -93,9 +102,9 @@ ls -la /share/
 ```
 /share/
 ├── emhass/                    # Original EMHASS (port 5000)
-│   ├── config_emhass.yaml     
-│   ├── secrets_emhass.yaml    
-│   └── data/                  
+│   ├── config_emhass.yaml
+│   ├── secrets_emhass.yaml
+│   └── data/
 │
 ├── emhass-enhanced/           # Enhanced EMHASS (port 5001) ✅
 │   ├── config_emhass.yaml     # Created on first run
@@ -103,9 +112,9 @@ ls -la /share/
 │   └── data/                  # Created on first run
 │
 └── emhass-ev/                 # EV EMHASS (port 5003)
-    ├── config_emhass.yaml     
-    ├── secrets_emhass.yaml    
-    └── data/                  
+    ├── config_emhass.yaml
+    ├── secrets_emhass.yaml
+    └── data/
 ```
 
 ## 🛠️ **Troubleshooting**
@@ -113,6 +122,7 @@ ls -la /share/
 ### **If Directory Still Doesn't Appear:**
 
 #### **Check Add-on Status**
+
 ```bash
 # Ensure add-on is STARTED (not just installed)
 # Check add-on logs for errors
@@ -120,6 +130,7 @@ ls -la /share/
 ```
 
 #### **Manual Verification**
+
 ```bash
 # SSH into Home Assistant (if enabled)
 # Or use File Editor add-on to browse /share/
@@ -127,6 +138,7 @@ ls -la /share/
 ```
 
 #### **Restart Add-on**
+
 ```bash
 # Stop and start the add-on to trigger run.sh again
 # Check logs for directory creation message
@@ -134,10 +146,10 @@ ls -la /share/
 
 ## ✅ **Expected Timeline**
 
-| **Action** | **Directory Status** | **Timeline** |
-|------------|---------------------|--------------|
-| **Install add-on** | ❌ Doesn't exist | Immediate |
-| **Start add-on** | ✅ **Created** | ~30 seconds |
+| **Action**             | **Directory Status**       | **Timeline**    |
+| ---------------------- | -------------------------- | --------------- |
+| **Install add-on**     | ❌ Doesn't exist           | Immediate       |
+| **Start add-on**       | ✅ **Created**             | ~30 seconds     |
 | **First optimization** | ✅ **Populated with data** | After first run |
 
 ## 🎯 **Next Steps**

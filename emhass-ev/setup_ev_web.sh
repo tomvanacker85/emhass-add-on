@@ -54,21 +54,21 @@ if [ -z "$TEMPLATES_DIR" ]; then
 fi
 if [ -n "$TEMPLATES_DIR" ]; then
     echo "📁 Found templates directory: $TEMPLATES_DIR"
-    
+
     # Check if configuration.html exists
     if [ -f "$TEMPLATES_DIR/configuration.html" ]; then
         echo "🔧 Modifying configuration.html to include EV extension..."
-        
+
         # Create a backup
         cp "$TEMPLATES_DIR/configuration.html" "$TEMPLATES_DIR/configuration.html.backup"
-        
+
         # Add EV extension script to the configuration page
         sed -i '/<\/body>/i \
 <!-- EV Configuration Extension -->\
 <script src="{{ url_for('\''static'\'', filename='\''ev_config_extension.js'\'') }}"></script>' "$TEMPLATES_DIR/configuration.html"
-        
+
         echo "✅ Configuration page modified to include EV extension"
-        
+
         # Also copy the standalone EV configuration page
         if [ -f "/app/ev_configuration.html" ]; then
             cp /app/ev_configuration.html "$TEMPLATES_DIR/"
@@ -88,7 +88,7 @@ cat > "$STATIC_DIR/ev_loader.js" << 'EOF'
 
 (function() {
     'use strict';
-    
+
     // Load EV configuration interface (using the simpler approach)
     function loadEVInterface() {
         if (!document.querySelector('#ev-config-panel')) {
@@ -107,7 +107,7 @@ cat > "$STATIC_DIR/ev_loader.js" << 'EOF'
             document.head.appendChild(script);
         }
     }
-    
+
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
@@ -116,12 +116,12 @@ cat > "$STATIC_DIR/ev_loader.js" << 'EOF'
     } else {
         setTimeout(loadEVInterface, 1000);
     }
-    
+
     // Also try on page navigation (for SPAs)
     window.addEventListener('popstate', function() {
         setTimeout(loadEVInterface, 500);
     });
-    
+
 })();
 EOF
 

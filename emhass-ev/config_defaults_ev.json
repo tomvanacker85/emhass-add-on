@@ -47,6 +47,9 @@
     "plant_conf": {
       "P_grid_max": 9000.0,
       "P_from_grid_max": 9000.0,
+      "set_use_battery": false,
+      "set_use_pv": false,
+      "set_use_ev": false,
       "module_model": ["CSUN_Eurasia_Energy_Systems_CSUN295_60M"],
       "inverter_model": ["Fronius_International_GmbH__Fronius_Primo_3_0_1_208_240__240V_"],
       "surface_tilt": [30],

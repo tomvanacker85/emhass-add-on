@@ -1,3 +1,4 @@
-name: EMHASS Add-on Energy Management for Home Assistant
-url: https://github.com/davidusb-geek/emhass-add-on
-maintainer: David HERNANDEZ <davidusb@gmail.com>
+name: EMHASS EV Add-on Repository
+url: https://github.com/tomvanacker85/emhass-add-on
+maintainer: Tom Van Acker <tomvanacker85@gmail.com>
+description: Energy Management for Home Assistant with Electric Vehicle Charging Optimization
