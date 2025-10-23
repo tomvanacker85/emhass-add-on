@@ -34,4 +34,4 @@ echo "📁 Config path: ${CONFIG_PATH}"
 
 # Start EMHASS with EV extension
 echo "🚀 Starting EMHASS EV web server..."
-exec python -m emhass.web_server --port "${EMHASS_PORT}"
+exec python3 -m emhass.web_server --port "${EMHASS_PORT}"
