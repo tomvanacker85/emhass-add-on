@@ -1,7 +1,7 @@
 name: "EMHASS Enhanced"
 description: "Energy Management for Home Assistant - Enhanced Version"
 url: https://github.com/tomvanacker85/emhass-add-on
-version: v0.13.8-enhanced #includes docker fixes
+version: v0.13.9-enhanced #includes EV configuration fixes
 slug: emhass-enhanced
 arch:
   - aarch64

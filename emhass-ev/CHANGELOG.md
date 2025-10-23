@@ -1,5 +1,28 @@
 # Changelog
 
+## v1.3.0 - 2025-10-23
+
+### Major Improvements
+
+- **Fixed EV Configuration Integration**: EV parameters now properly appear in YAML editor
+- **Native EMHASS Framework Integration**: EV section integrated into existing EMHASS configuration system
+- **Resolved Configuration Display Issues**: Clean, professional layout matching EMHASS design patterns
+- **Complete Parameter Mapping**: All EV parameters now included in configuration output
+- **Enhanced User Experience**: Toggle switch functionality for EV section like Battery/Solar sections
+
+### Technical Fixes
+
+- Modified `build_config()` in `utils.py` to load EV parameters from `/share/emhass-ev/config.json`
+- Added EV parameters to `associations.csv` for proper parameter mapping
+- Updated `config_defaults.json` to include EV parameter defaults
+- Added EV section to `configuration_list.html` template
+- Enhanced `configuration_script.js` with EV toggle support
+
+### Breaking Changes
+
+- EV configuration now fully integrated with EMHASS's native configuration system
+- Previous standalone EV configuration methods deprecated in favor of unified approach
+
 ## v1.0.4 - 2025-10-23
 
 ### Enhancement
