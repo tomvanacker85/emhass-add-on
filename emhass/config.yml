@@ -8,7 +8,7 @@ arch:
   - amd64
   - armhf
   - armv7
-image: "ghcr.io/davidusb-geek/emhass:latest" #use working original image base
+image: "ghcr.io/tomvanacker85/emhass:latest" #use your enhanced image
 ports:
   5001/tcp: 5001
 ports_description:
