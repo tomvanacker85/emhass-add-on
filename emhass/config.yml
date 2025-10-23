@@ -8,7 +8,7 @@ arch:
   - amd64
   - armhf
   - armv7
-image: "ghcr.io/davidusb-geek/emhass" #use working original image base
+image: "ghcr.io/davidusb-geek/emhass:latest" #use working original image base
 ports:
   5001/tcp: 5001
 ports_description:
