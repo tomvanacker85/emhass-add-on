@@ -1,0 +1,91 @@
+# Example EV Optimization with Distance Forecast (km-based)
+# This example shows how to use the EV extension with predicted driving distance
+
+# Basic EV Setup (1 EV)
+number_of_ev_loads: 1
+ev_battery_capacity: [75000] # 75 kWh battery in Wh
+ev_charging_efficiency: [0.95] # 95% charging efficiency
+ev_nominal_charging_power: [11000] # 11 kW max charging power
+ev_minimum_charging_power: [1000] # 1 kW minimum charging power
+ev_consumption_efficiency: [20.0] # 20 kWh/100km (realistic for electric car)
+
+# Runtime parameters (passed via API call)
+ev_availability:
+  - [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] # EV available at home (0=away, 1=home)
+
+ev_minimum_soc_schedule:
+  - [
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.8,
+      0.8,
+      0.8,
+      0.8,
+      0.8,
+      0.8,
+      0.6,
+      0.6,
+      0.6,
+      0.6,
+      0.6,
+      0.6,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+      0.2,
+    ] # Minimum desired SOC (%)
+
+ev_initial_soc: [0.3] # Starting SOC (30%)
+
+# NEW: EV Distance Forecast (much more intuitive!)
+ev_distance_forecast:
+  - [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      25,
+      40,
+      60,
+      75,
+      50,
+      40,
+      25,
+      15,
+      10,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+    ] # Expected distance in km per time step
+
+# Example explanation:
+# - Hours 0-5: EV parked at home, no driving (0 km)
+# - Hour 6: Start commute, 25 km
+# - Hours 7-11: Commute and work driving (40-75 km per hour)
+# - Hour 12: Lunch trip, 25 km
+# - Hours 13-16: Afternoon activities, decreasing distance (15-5 km)
+# - Hours 17-23: EV back home, no driving (0 km)
+
+# Energy calculation:
+# - 75 km at 20 kWh/100km = 15 kWh consumed
+# - Much easier to estimate than Watts!
+
+# The optimizer will:
+# 1. Convert km to kWh using ev_consumption_efficiency (20 kWh/100km)
+# 2. Account for this energy loss in SOC calculations
+# 3. Ensure enough charging to meet driving needs + minimum SOC
+# 4. Optimize charging timing for minimum cost

@@ -1,0 +1,118 @@
+# EV Distance Scenarios - Real-world Examples
+
+# Scenario 1: Daily Commuter (40km round trip)
+scenario_commuter:
+  ev_consumption_efficiency: [18.0] # Efficient EV, highway driving
+  ev_distance_forecast:
+    - [0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0]
+  # 7AM: Drive to work (20km), 5PM: Drive home (20km)
+
+# Scenario 2: Weekend Road Trip
+scenario_road_trip:
+  ev_consumption_efficiency: [22.0] # Higher consumption due to highway speeds
+  ev_distance_forecast:
+    - [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        150,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        150,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+      ]
+  # 9AM: Drive to destination (150km), 5PM: Return trip (150km)
+
+# Scenario 3: City Delivery Driver
+scenario_delivery:
+  ev_consumption_efficiency: [16.0] # Efficient city driving with regeneration
+  ev_distance_forecast:
+    - [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        30,
+        25,
+        20,
+        30,
+        25,
+        20,
+        30,
+        25,
+        20,
+        15,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+      ]
+  # 8AM-6PM: Continuous delivery routes throughout the day
+
+# Scenario 4: Taxi Service
+scenario_taxi:
+  ev_consumption_efficiency: [19.0] # Mixed city/highway driving
+  ev_distance_forecast:
+    - [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        15,
+        20,
+        25,
+        30,
+        25,
+        20,
+        15,
+        20,
+        25,
+        30,
+        35,
+        40,
+        35,
+        30,
+        25,
+        20,
+        15,
+        10,
+      ]
+  # Variable driving throughout the day, peak during rush hours
+# Usage with EMHASS API:
+# POST /action/dayahead-optim
+# {
+#   "number_of_ev_loads": 1,
+#   "ev_battery_capacity": [60000],
+#   "ev_charging_efficiency": [0.92],
+#   "ev_nominal_charging_power": [7400],
+#   "ev_minimum_charging_power": [1000],
+#   "ev_consumption_efficiency": [18.0],
+#   "ev_distance_forecast": [[0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0]],
+#   "ev_availability": [[1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]],
+#   "ev_minimum_soc_schedule": [[0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.3, 0.3, 0.2, 0.2, 0.2, 0.2]],
+#   "ev_initial_soc": [0.4]
+# }
