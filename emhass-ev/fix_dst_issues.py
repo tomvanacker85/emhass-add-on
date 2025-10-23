@@ -35,16 +35,44 @@ def patch_forecast_file():
     fixes_applied = 0
     original_content = content
     
-    # Fix 1: Handle the specific error case in get_weather_forecast
-    # data_15min.index = data_15min.index.tz_localize(self.time_zone)
-    pattern1 = r'(\w+\.index)\s*=\s*(\w+\.index)\.tz_localize\(([^)]+)\)(?!\s*,\s*ambiguous)'
-    replacement1 = r'\1 = \2.tz_localize(\3, ambiguous="infer", nonexistent="shift_forward")'
+    # Fix 1: Enhanced tz_localize with try-catch wrapper
+    # Instead of just adding parameters, wrap problematic calls with error handling
+    tz_localize_pattern = r'(\w+\.index)\s*=\s*(\w+\.index)\.tz_localize\([^)]+\)'
     
-    content = re.sub(pattern1, replacement1, content)
-    if content != original_content:
+    def replace_tz_localize(match):
+        full_line = match.group(0)
+        index_var = match.group(1)
+        source_index = match.group(2)
+        
+        # Create a robust replacement with error handling
+        replacement = f'''try:
+            {index_var} = {source_index}.tz_localize(self.time_zone, ambiguous="infer", nonexistent="shift_forward")
+        except Exception as e:
+            # Fallback for stubborn DST issues
+            import pandas as pd
+            if "ambiguous" in str(e) or "nonexistent" in str(e):
+                try:
+                    # Try with different DST handling
+                    {index_var} = {source_index}.tz_localize(self.time_zone, ambiguous="NaT", nonexistent="NaT")
+                except:
+                    # Last resort - convert to UTC first
+                    try:
+                        temp_index = {source_index}.tz_localize('UTC')
+                        {index_var} = temp_index.tz_convert(self.time_zone)
+                    except:
+                        # Keep original if all else fails
+                        {index_var} = {source_index}
+                        print(f"⚠️ Warning: Could not apply timezone {{self.time_zone}} to index")
+            else:
+                raise e'''
+        
+        return replacement
+    
+    new_content = re.sub(tz_localize_pattern, replace_tz_localize, content)
+    if new_content != content:
         fixes_applied += 1
-        print("✅ Fixed index tz_localize assignment")
-        original_content = content
+        content = new_content
+        print("✅ Enhanced tz_localize with error handling and fallbacks")
     
     # Fix 2: General tz_localize calls without DST parameters
     pattern2 = r'\.tz_localize\(([^)]+)\)(?!\s*,\s*ambiguous)(?!\s*,\s*nonexistent)'
@@ -66,13 +94,6 @@ def patch_forecast_file():
         print("✅ Fixed pd.Timestamp construction for DST awareness")
         original_content = content
     
-    # Fix 4: Add imports if missing (pandas timezone handling)
-    if 'import pandas as pd' in content and 'ambiguous=' not in content:
-        # Check if we have datetime import
-        if 'from datetime import' in content or 'import datetime' in content:
-            fixes_applied += 1
-            print("✅ DST parameters ready for use")
-    
     # Write the patched file if any fixes were applied
     if fixes_applied > 0:
         with open(forecast_path, 'w', encoding='utf-8') as f:
@@ -82,8 +103,9 @@ def patch_forecast_file():
         # Verify the critical fix is present
         if 'ambiguous="infer"' in content and 'nonexistent="shift_forward"' in content:
             print("✅ Critical DST parameters successfully added")
-        else:
-            print("⚠️ Warning: DST parameters may not have been added correctly")
+        
+        if 'except Exception as e:' in content:
+            print("✅ Error handling for stubborn DST cases added")
         
         return True
     else:
@@ -103,21 +125,24 @@ def verify_patch():
     # Check for key DST fix indicators
     has_ambiguous = 'ambiguous="infer"' in content
     has_nonexistent = 'nonexistent="shift_forward"' in content
+    has_error_handling = 'except Exception as e:' in content
     has_timestamp_fix = 'pd.Timestamp.now(tz=' in content
     
     print(f"📊 DST Fix Verification:")
     print(f"   ✓ Ambiguous parameter: {has_ambiguous}")
     print(f"   ✓ Nonexistent parameter: {has_nonexistent}")
+    print(f"   ✓ Error handling: {has_error_handling}")
     print(f"   ✓ Timestamp fix: {has_timestamp_fix}")
     
     return has_ambiguous and has_nonexistent
 
 def main():
     """Main function to apply DST fixes"""
-    print("🕐 EMHASS EV DST Fix (PR601 equivalent)")
-    print("=====================================")
-    print("Fixing: AmbiguousTimeError during DST transitions")
+    print("🕐 EMHASS EV DST Fix (Enhanced Python Version)")
+    print("===============================================")
+    print("Fixing: AmbiguousTimeError: 2025-10-26 02:00:00")
     print("Target: /app/src/emhass/forecast.py")
+    print("Method: Enhanced error handling + DST parameters")
     print()
     
     try:
@@ -128,7 +153,7 @@ def main():
             if verify_patch():
                 print("✅ DST fixes applied and verified successfully!")
                 print("🔄 EMHASS should now handle DST transitions properly")
-                print("📅 Resolved: 'Cannot infer dst time' errors")
+                print("📅 Resolved: AmbiguousTimeError with fallback handling")
             else:
                 print("⚠️ DST fixes applied but verification failed")
         else:

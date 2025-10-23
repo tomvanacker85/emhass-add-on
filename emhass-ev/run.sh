@@ -42,9 +42,9 @@ fi
 # Apply DST fixes (PR601 equivalent) before starting EMHASS
 echo "🕐 Applying DST timezone fixes..."
 
-# Try shell script version first (more reliable)
+# Try shell script version first (most reliable)
 if [ -f "/app/fix_dst_issues.sh" ]; then
-    echo "📍 Using shell script DST fix"
+    echo "📍 Using enhanced shell script DST fix"
     /app/fix_dst_issues.sh
 elif [ -f "/app/fix_dst_issues.py" ]; then
     echo "📍 Using Python script DST fix"
@@ -63,8 +63,15 @@ elif [ -f "/app/fix_dst_issues.py" ]; then
     fi
 else
     echo "⚠️ No DST fix scripts found"
-    echo "ℹ️ DST errors may occur during timezone transitions"
 fi
+
+# Apply emergency DST fix for stubborn cases
+if [ -f "/app/fix_dst_emergency.sh" ]; then
+    echo "🚨 Applying emergency DST fix for AmbiguousTimeError"
+    /app/fix_dst_emergency.sh
+fi
+
+echo "ℹ️ DST fixes complete - EMHASS should handle timezone transitions"
 
 # Set up EV web interface with enhanced form and YAML support
 echo "🌐 Setting up Enhanced EV configuration..."

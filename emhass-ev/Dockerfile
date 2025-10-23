@@ -19,11 +19,13 @@ COPY ev_configuration.html /app/ev_configuration.html
 COPY setup_ev_enhanced.sh /app/setup_ev_enhanced.sh
 COPY fix_dst_issues.py /app/fix_dst_issues.py
 COPY fix_dst_issues.sh /app/fix_dst_issues.sh
+COPY fix_dst_emergency.sh /app/fix_dst_emergency.sh
 
 # Copy custom startup script
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
 RUN chmod +x /app/setup_ev_enhanced.sh
 RUN chmod +x /app/fix_dst_issues.sh
+RUN chmod +x /app/fix_dst_emergency.sh
 
 ENTRYPOINT ["/run.sh"]
