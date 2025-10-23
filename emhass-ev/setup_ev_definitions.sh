@@ -12,15 +12,15 @@ PARAM_DEFS=$(find /app -name "param_definitions.json" | head -1)
 
 if [ -n "$PARAM_DEFS" ]; then
     echo "📁 Found parameter definitions: $PARAM_DEFS"
-    
+
     # Create backup
     if [ ! -f "$PARAM_DEFS.original" ]; then
         cp "$PARAM_DEFS" "$PARAM_DEFS.original"
         echo "� Created backup of original param_definitions.json"
     fi
-    
+
     echo "🔧 Adding EV parameter definitions..."
-    
+
     # Check if EV section already exists
     if ! grep -q "Electric Vehicle (EV)" "$PARAM_DEFS"; then
         # Create temporary file with EV definitions to insert
@@ -70,25 +70,25 @@ if [ -n "$PARAM_DEFS" ]; then
     }
   },
 EOF
-        
+
         # Insert the EV definitions before the last closing brace
         # First, remove the last closing brace
         sed -i '$s/}$//' "$PARAM_DEFS"
-        
+
         # Add a comma after the last section if it doesn't already have one
         sed -i '$s/$/,/' "$PARAM_DEFS"
-        
+
         # Append the EV definitions (removing the trailing comma from our template)
         sed 's/,$//' /tmp/ev_definitions.json >> "$PARAM_DEFS"
-        
+
         # Close the JSON properly
         echo "}" >> "$PARAM_DEFS"
-        
+
         echo "✅ EV parameter definitions added to param_definitions.json"
     else
         echo "ℹ️ EV definitions already exist in param_definitions.json"
     fi
-    
+
 else
     echo "❌ Could not find param_definitions.json"
     exit 1

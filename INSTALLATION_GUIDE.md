@@ -29,11 +29,11 @@
 ```yaml
 # Example configuration for a Tesla Model 3
 number_of_ev_loads: 1
-ev_battery_capacity: "[75000]"          # 75 kWh battery (in Wh)
-ev_charging_efficiency: "[0.9]"         # 90% charging efficiency
-ev_nominal_charging_power: "[11000]"    # 11 kW home charger
-ev_minimum_charging_power: "[1380]"     # 1.38 kW minimum power
-ev_consumption_efficiency: "[18.5]"     # 18.5 kWh/100km consumption
+ev_battery_capacity: "[75000]" # 75 kWh battery (in Wh)
+ev_charging_efficiency: "[0.9]" # 90% charging efficiency
+ev_nominal_charging_power: "[11000]" # 11 kW home charger
+ev_minimum_charging_power: "[1380]" # 1.38 kW minimum power
+ev_consumption_efficiency: "[18.5]" # 18.5 kWh/100km consumption
 ```
 
 ### Step 4: Start the Add-on
@@ -50,14 +50,14 @@ ev_consumption_efficiency: "[18.5]"     # 18.5 kWh/100km consumption
 
 ## 🔧 **EV Configuration Parameters**
 
-| Parameter | Description | Example |
-|-----------|-------------|---------|
-| `number_of_ev_loads` | Number of EVs (0 to disable) | `1` |
-| `ev_battery_capacity` | Battery size in Wh | `"[75000]"` (75 kWh) |
-| `ev_charging_efficiency` | Charging efficiency (0-1) | `"[0.9]"` (90%) |
-| `ev_nominal_charging_power` | Max charging power in W | `"[11000]"` (11 kW) |
-| `ev_minimum_charging_power` | Min charging power in W | `"[1380]"` (1.38 kW) |
-| `ev_consumption_efficiency` | Energy use in kWh/100km | `"[18.5]"` |
+| Parameter                   | Description                  | Example              |
+| --------------------------- | ---------------------------- | -------------------- |
+| `number_of_ev_loads`        | Number of EVs (0 to disable) | `1`                  |
+| `ev_battery_capacity`       | Battery size in Wh           | `"[75000]"` (75 kWh) |
+| `ev_charging_efficiency`    | Charging efficiency (0-1)    | `"[0.9]"` (90%)      |
+| `ev_nominal_charging_power` | Max charging power in W      | `"[11000]"` (11 kW)  |
+| `ev_minimum_charging_power` | Min charging power in W      | `"[1380]"` (1.38 kW) |
+| `ev_consumption_efficiency` | Energy use in kWh/100km      | `"[18.5]"`           |
 
 ## 🚗 **Multi-EV Configuration**
 
@@ -65,21 +65,23 @@ For multiple EVs, use arrays:
 
 ```yaml
 number_of_ev_loads: 2
-ev_battery_capacity: "[75000, 60000]"           # Tesla + Nissan Leaf
-ev_charging_efficiency: "[0.9, 0.88]"          # Different efficiencies
-ev_nominal_charging_power: "[11000, 7400]"     # 11kW + 7.4kW chargers
-ev_minimum_charging_power: "[1380, 1380]"      # Same minimum
-ev_consumption_efficiency: "[18.5, 16.2]"      # Different consumption
+ev_battery_capacity: "[75000, 60000]" # Tesla + Nissan Leaf
+ev_charging_efficiency: "[0.9, 0.88]" # Different efficiencies
+ev_nominal_charging_power: "[11000, 7400]" # 11kW + 7.4kW chargers
+ev_minimum_charging_power: "[1380, 1380]" # Same minimum
+ev_consumption_efficiency: "[18.5, 16.2]" # Different consumption
 ```
 
 ## 📊 **Usage Examples**
 
 ### Daily Commuter
+
 - Connect EV: 6 PM - 8 AM
 - Need 80% charge by 7 AM
 - Optimize for lowest electricity rates
 
 ### Weekend Trip
+
 - Need 90% charge by Friday evening
 - Flexible timing over multiple days
 - Balance with solar production

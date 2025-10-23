@@ -1153,7 +1153,7 @@ def build_config(
             with open(ev_config_path, "r") as ev_data:
                 ev_config = json.load(ev_data)
                 logger.info("Loading EV parameters from /share/emhass-ev/config.json")
-                
+
                 # Extract EV parameters from ev_conf section and add to main config
                 if "params" in ev_config and "ev_conf" in ev_config["params"]:
                     ev_params = ev_config["params"]["ev_conf"]
@@ -1164,7 +1164,15 @@ def build_config(
                     config["ev_nominal_charging_power"] = ev_params.get("ev_nominal_charging_power", [11000])
                     config["ev_minimum_charging_power"] = ev_params.get("ev_minimum_charging_power", [1380])
                     config["ev_consumption_efficiency"] = ev_params.get("ev_consumption_efficiency", [0.2])
-                    logger.info(f"Loaded EV parameters for {config["number_of_ev_loads"]} vehicles")
+
+                    # NEW: Add runtime EV parameters for dynamic control
+                    config["ev_availability"] = ev_params.get("ev_availability", [[1] * 24])
+                    config["ev_minimum_soc_schedule"] = ev_params.get("ev_minimum_soc_schedule", [[0.2] * 24])
+                    config["ev_initial_soc"] = ev_params.get("ev_initial_soc", [0.2])
+                    config["ev_distance_forecast"] = ev_params.get("ev_distance_forecast", [[0] * 24])
+
+                    logger.info(f"Loaded EV parameters for {config['number_of_ev_loads']} vehicles")
+                    logger.info(f"EV runtime parameters: availability, min_soc, initial_soc, distance_forecast")
         except Exception as e:
             logger.warning(f"Failed to load EV parameters: {e}")
 

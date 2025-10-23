@@ -22,13 +22,13 @@ echo "📁 Found static directory: $STATIC_DIR"
 CONFIG_LIST_HTML="$STATIC_DIR/configuration_list.html"
 if [ -f "$CONFIG_LIST_HTML" ]; then
     echo "📝 Adding EV section to configuration_list.html template..."
-    
+
     # Create backup
     if [ ! -f "$CONFIG_LIST_HTML.original" ]; then
         cp "$CONFIG_LIST_HTML" "$CONFIG_LIST_HTML.original"
         echo "💾 Created backup of configuration_list.html"
     fi
-    
+
     # Check if EV section already exists
     if ! grep -q "Electric Vehicle" "$CONFIG_LIST_HTML"; then
         # Add EV section after Battery section, before the closing
@@ -44,9 +44,9 @@ if [ -f "$CONFIG_LIST_HTML" ]; then
   <div class="section-body"> </div> <!--  parameters will get generated here -->
 </div>
 EOF
-        
+
         # Insert EV section after Battery section
-        sed -i '/<div class="section-body"> <\/div> <!--  parameters will get generated here -->/,/<\/div>$/{ 
+        sed -i '/<div class="section-body"> <\/div> <!--  parameters will get generated here -->/,/<\/div>$/{
             /<\/div>$/{
                 /Battery/{
                     a\
@@ -63,7 +63,7 @@ EOF
                 }
             }
         }' "$CONFIG_LIST_HTML"
-        
+
         echo "✅ EV section added to configuration_list.html"
     else
         echo "ℹ️ EV section already exists in configuration_list.html"
@@ -77,20 +77,20 @@ fi
 PARAM_DEFS="/app/src/emhass/static/data/param_definitions.json"
 if [ -f "$PARAM_DEFS" ]; then
     echo "📝 Ensuring EV parameters are in param_definitions.json..."
-    
+
     # Create backup
     if [ ! -f "$PARAM_DEFS.original" ]; then
         cp "$PARAM_DEFS" "$PARAM_DEFS.original"
         echo "💾 Created backup of param_definitions.json"
     fi
-    
+
     # Check if EV section exists
     if ! grep -q "Electric Vehicle (EV)" "$PARAM_DEFS"; then
         echo "🔧 Adding EV parameter definitions..."
-        
+
         # Restore from backup and add EV section properly
         cp "$PARAM_DEFS.original" "$PARAM_DEFS"
-        
+
         # Create EV definitions with proper EMHASS structure
         cat > /tmp/ev_param_definitions.json << 'EOF'
 ,
@@ -139,13 +139,13 @@ if [ -f "$PARAM_DEFS" ]; then
     }
   }
 EOF
-        
+
         # Remove the last closing brace, add EV section, then close
         head -n -1 "$PARAM_DEFS" > /tmp/param_defs_temp.json
         cat /tmp/param_defs_temp.json /tmp/ev_param_definitions.json > /tmp/param_defs_new.json
         echo "}" >> /tmp/param_defs_new.json
         mv /tmp/param_defs_new.json "$PARAM_DEFS"
-        
+
         echo "✅ EV parameter definitions added"
     else
         echo "ℹ️ EV parameter definitions already exist"
@@ -159,20 +159,20 @@ fi
 CONFIG_SCRIPT="/app/src/emhass/static/configuration_script.js"
 if [ -f "$CONFIG_SCRIPT" ]; then
     echo "📝 Updating configuration script for EV support..."
-    
+
     # Create backup
     if [ ! -f "$CONFIG_SCRIPT.original" ]; then
         cp "$CONFIG_SCRIPT" "$CONFIG_SCRIPT.original"
         echo "💾 Created backup of configuration_script.js"
     fi
-    
+
     # Check if EV support already added
     if ! grep -q "set_use_ev" "$CONFIG_SCRIPT"; then
         echo "🔧 Adding EV support to configuration script..."
-        
+
         # Add set_use_ev to header_input_list
         sed -i 's/let header_input_list = \["set_use_battery", "set_use_pv", "number_of_deferrable_loads"\];/let header_input_list = ["set_use_battery", "set_use_pv", "set_use_ev", "number_of_deferrable_loads"];/' "$CONFIG_SCRIPT"
-        
+
         # Add EV case to the switch statement
         sed -i '/case "number_of_deferrable_loads":/i\
     //if set_use_ev, add or remove EV section (inc. params)\
@@ -189,7 +189,7 @@ if [ -f "$CONFIG_SCRIPT" ]; then
       break;\
 \
     ' "$CONFIG_SCRIPT"
-        
+
         echo "✅ EV support added to configuration script"
     else
         echo "ℹ️ EV support already exists in configuration script"
@@ -203,13 +203,13 @@ fi
 CONFIG_DEFAULTS="/app/src/emhass/data/config_defaults.json"
 if [ -f "$CONFIG_DEFAULTS" ]; then
     echo "📝 Adding set_use_ev to config defaults..."
-    
+
     # Create backup
     if [ ! -f "$CONFIG_DEFAULTS.original" ]; then
         cp "$CONFIG_DEFAULTS" "$CONFIG_DEFAULTS.original"
         echo "💾 Created backup of config_defaults.json"
     fi
-    
+
     # Add set_use_ev if it doesn't exist
     if ! grep -q "set_use_ev" "$CONFIG_DEFAULTS"; then
         sed -i '/"set_use_battery": false,/a\  "set_use_ev": false,' "$CONFIG_DEFAULTS"

@@ -12,16 +12,16 @@ UTILS_PY="/app/src/emhass/utils.py"
 
 if [ -f "$UTILS_PY" ]; then
     echo "📝 Patching build_config function to include EV parameters..."
-    
+
     # Create backup
     if [ ! -f "$UTILS_PY.original" ]; then
         cp "$UTILS_PY" "$UTILS_PY.original"
         echo "💾 Created backup of utils.py"
     fi
-    
+
     # Find the end of the build_config function and add EV parameter loading
     # We'll add the EV loading just before the return statement
-    
+
     # Create the EV loading code
     cat > /tmp/ev_config_patch.py << 'EOF'
     # Load EV parameters if they exist
@@ -31,11 +31,11 @@ if [ -f "$UTILS_PY" ]; then
             with open(ev_config_path, "r") as ev_data:
                 ev_config = json.load(ev_data)
                 logger.info("Loading EV parameters from /share/emhass-ev/config.json")
-                
+
                 # Extract EV parameters from ev_conf section and add to main config
                 if "params" in ev_config and "ev_conf" in ev_config["params"]:
                     ev_params = ev_config["params"]["ev_conf"]
-                    
+
                     # Map EV parameters to EMHASS config format
                     config["set_use_ev"] = bool(ev_params.get("number_of_ev_loads", 0) > 0)
                     if config["set_use_ev"]:
@@ -52,7 +52,7 @@ if [ -f "$UTILS_PY" ]; then
         logger.debug("No EV configuration file found at /share/emhass-ev/config.json")
 
 EOF
-    
+
     # Insert the EV loading code before the return statement in build_config
     # Find the line with "return config" and insert the EV code before it
     /app/.venv/bin/python << 'PYTHON_SCRIPT'
@@ -91,13 +91,13 @@ CONFIG_DEFAULTS="/app/src/emhass/data/config_defaults.json"
 
 if [ -f "$CONFIG_DEFAULTS" ]; then
     echo "📝 Adding EV parameters to config_defaults.json..."
-    
+
     # Create backup
     if [ ! -f "$CONFIG_DEFAULTS.defaults_backup" ]; then
         cp "$CONFIG_DEFAULTS" "$CONFIG_DEFAULTS.defaults_backup"
         echo "💾 Created backup of config_defaults.json"
     fi
-    
+
     # Add EV parameters to defaults if they don't exist
     /app/.venv/bin/python << 'PYTHON_SCRIPT'
 import json

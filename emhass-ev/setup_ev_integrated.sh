@@ -123,7 +123,7 @@ if [ -n "$CONFIG_DEFAULTS" ]; then
     fi
 
     echo "🔧 Adding set_use_ev toggle to config defaults..."
-    
+
     # Add set_use_ev parameter after set_use_battery using sed
     # Check if set_use_ev doesn't already exist
     if ! grep -q "set_use_ev" "$CONFIG_DEFAULTS"; then
@@ -133,7 +133,7 @@ if [ -n "$CONFIG_DEFAULTS" ]; then
     else
         echo "ℹ️ set_use_ev already exists in config defaults"
     fi
-    
+
 else
     echo "❌ Could not find config_defaults.json"
 fi

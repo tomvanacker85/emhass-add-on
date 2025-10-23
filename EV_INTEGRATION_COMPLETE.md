@@ -7,6 +7,7 @@ The EMHASS EV Extension has been **successfully integrated** into the existing E
 ## 🎯 What Was Achieved
 
 ### 1. Proper Framework Integration
+
 - **EV Section**: Added as a native section card in `configuration_list.html`
 - **Toggle Switch**: `set_use_ev` toggle following Battery/Solar pattern
 - **Parameter Definitions**: EV parameters integrated into `param_definitions.json`
@@ -14,13 +15,16 @@ The EMHASS EV Extension has been **successfully integrated** into the existing E
 - **Default Configuration**: `config_defaults.json` includes `set_use_ev: false`
 
 ### 2. Native EMHASS Experience
+
 - EV section appears between Solar System (PV) and Battery sections
 - Toggle switch enables/disables EV parameters dynamically
 - Full integration with EMHASS save/load/default functionality
 - Consistent styling and user experience with existing sections
 
 ### 3. Complete Parameter Coverage
+
 The following EV parameters are available when the toggle is enabled:
+
 - **set_use_ev**: Enable Electric Vehicle optimization
 - **number_of_ev_loads**: Number of electric vehicles (1-4)
 - **ev_battery_capacity**: Battery capacity in Wh per EV
@@ -32,6 +36,7 @@ The following EV parameters are available when the toggle is enabled:
 ## 🏗️ Technical Architecture
 
 ### Configuration Flow
+
 ```
 1. User opens EMHASS configuration page
 2. configuration_list.html template loads with EV section
@@ -42,6 +47,7 @@ The following EV parameters are available when the toggle is enabled:
 ```
 
 ### File Modifications
+
 - **`/app/src/emhass/static/configuration_list.html`**: Added EV section card
 - **`/app/src/emhass/static/data/param_definitions.json`**: Added "Electric Vehicle (EV)" section
 - **`/app/src/emhass/static/configuration_script.js`**: Added set_use_ev handling
@@ -50,6 +56,7 @@ The following EV parameters are available when the toggle is enabled:
 ## 🎮 User Experience
 
 ### How to Use EV Configuration
+
 1. **Access Configuration**: Open EMHASS configuration page at `http://localhost:5000/configuration`
 2. **Enable EV Section**: Locate "Electric Vehicle (EV)" section and toggle the switch
 3. **Configure Parameters**: Set EV parameters for your specific vehicles
@@ -57,6 +64,7 @@ The following EV parameters are available when the toggle is enabled:
 5. **YAML Editing**: Toggle to YAML mode to edit configuration directly
 
 ### Example EV Configuration
+
 ```json
 {
   "set_use_ev": true,
@@ -72,12 +80,14 @@ The following EV parameters are available when the toggle is enabled:
 ## 🔧 Installation and Setup
 
 ### For Home Assistant Users
+
 1. **Add Repository**: `https://github.com/tomvanacker85/emhass-add-on`
 2. **Install Add-on**: Search for "EMHASS" in Home Assistant add-on store
 3. **Configure**: Use the integrated EV configuration section
 4. **Start Optimization**: EV parameters automatically included in optimization
 
 ### For Docker Users
+
 ```bash
 # Pull the latest image
 docker pull ghcr.io/tomvanacker85/emhass-add-on/emhass:latest
@@ -93,16 +103,19 @@ docker run -d \
 ## 🎯 Benefits of This Integration
 
 ### 1. Seamless Experience
+
 - No separate configuration files or interfaces
 - Native EMHASS look and feel
 - Consistent with existing Battery/Solar sections
 
 ### 2. Proper Framework Extension
+
 - Follows EMHASS architectural patterns
 - Leverages existing configuration management
 - Future-proof design for additional EV features
 
 ### 3. Multi-EV Support
+
 - Configure up to 4 electric vehicles
 - Different parameters per vehicle
 - Individual charging schedules and efficiency ratings
@@ -110,6 +123,7 @@ docker run -d \
 ## 🔄 Version History
 
 ### v1.2.1 (Final Release)
+
 - ✅ Complete EMHASS framework integration
 - ✅ Native configuration section with toggle
 - ✅ Multi-EV parameter support
@@ -119,14 +133,16 @@ docker run -d \
 ## 📞 Support and Troubleshooting
 
 ### Common Issues
+
 1. **EV Section Not Visible**: Ensure container restart after integration
 2. **Parameters Not Saving**: Check write permissions to /data or /share
 3. **Toggle Not Working**: Verify JavaScript loading correctly
 
 ### Getting Help
+
 - **Documentation**: See included DOCS.md files
-- **Examples**: Check example_ev_*.yaml and example_ev_*.py files
-- **Testing**: Use test_ev_*.sh scripts for validation
+- **Examples**: Check example*ev*_.yaml and example*ev*_.py files
+- **Testing**: Use test*ev*\*.sh scripts for validation
 
 ---
 

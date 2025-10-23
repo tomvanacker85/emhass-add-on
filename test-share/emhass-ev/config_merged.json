@@ -1,0 +1,186 @@
+{
+  "params": {
+    "passed_data": {
+      "pv_power_forecasts": [0,0,0,0,0,0,0,0,0,40,70,250,660,1110,1490,1660,1810,1500,1110,755,540,320,180,40],
+      "load_power_forecasts": [478,398,397,456,398,377,442,463,503,507,544,553,599,630,675,668,667,669,684,725,677,612,533,468],
+      "load_cost_forecasts": [0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25],
+      "prod_price_forecasts": [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05]
+    },
+    "retrieve_hass_conf": {
+      "hass_url": "http://supervisor/core/api",
+      "long_lived_token": "your_long_lived_token_here",
+      "time_zone": "Europe/Brussels",
+      "lat": 51.1765913,
+      "lon": 3.8660901,
+      "alt": 4807.8,
+      "sensor_power_photovoltaics": "sensor.total_pv_power_w",
+      "sensor_power_photovoltaics_forecast": "sensor.p_pv_forecast",
+      "sensor_power_load_no_var_loads": "sensor.power_load_no_var_loads",
+      "sensor_replace_zero": [
+        "sensor.total_pv_power_w",
+        "sensor.p_pv_forecast",
+        "sensor.power_load_no_var_loads"
+      ],
+      "sensor_linear_interp": [
+        "sensor.total_pv_power_w"
+      ],
+      "method_ts_round": "nearest",
+      "continual_publish": false,
+      "load_negative": false,
+      "set_zero_min": true
+    },
+    "optim_conf": {
+      "logging_level": "INFO",
+      "costfun": "profit",
+      "optimization_time_step": 60,
+      "historic_days_to_retrieve": 9,
+      "data_path": "default",
+      "set_total_pv_sell": false,
+      "lp_solver": "COIN_CMD",
+      "lp_solver_path": "empty",
+      "set_nocharge_from_grid": false,
+      "set_nodischarge_to_grid": false,
+      "set_battery_dynamic": true,
+      "battery_dynamic_max": 0.9,
+      "battery_dynamic_min": -0.9,
+      "weight_battery_discharge": 0.02,
+      "weight_battery_charge": 0.02,
+      "num_def_loads": 10,
+      "number_of_deferrable_loads": 10,
+      "P_deferrable_nom": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "nominal_power_of_deferrable_loads": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "minimum_power_of_deferrable_loads": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "def_total_hours": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "operating_hours_of_each_deferrable_load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "treat_def_as_semi_cont": [true, true, true, true, true, true, true, true, true, true],
+      "treat_deferrable_load_as_semi_cont": [true, true, true, true, true, true, true, true, true, true],
+      "set_def_constant": [false, false, false, false, false, false, false, false, false, false],
+      "set_deferrable_load_single_constant": [false, false, false, false, false, false, false, false, false, false],
+      "set_deferrable_startup_penalty": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05],
+      "def_start_timestep": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "start_timesteps_of_each_deferrable_load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "def_end_timestep": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "end_timesteps_of_each_deferrable_load": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "weather_forecast_method": "open-meteo",
+      "load_forecast_method": "naive",
+      "sklearn_model": "KNeighboursRegressor",
+      "num_lags": 24,
+      "split_date_delta": "48h",
+      "perform_backtest": true,
+      "delta_forecast_daily": 3,
+      "load_cost_forecast_method": "hp_hc_periods",
+      "list_hp_periods": [{"period_hp_1":{"start":"02:54","end":"15:24"}},{"period_hp_2":{"start":"17:24","end":"20:24"}}],
+      "load_peak_hour_periods": {
+        "period_hp_1": [
+          {"start": "02:54"},
+          {"end": "15:24"}
+        ],
+        "period_hp_2": [
+          {"start": "17:24"},
+          {"end": "20:24"}
+        ]
+      },
+      "load_cost_hp": 0.1907,
+      "load_cost_hc": 0.1419,
+      "load_peak_hours_cost": 0.1907,
+      "load_offpeak_hours_cost": 0.1419,
+      "photovoltaic_power_forecast": "csv",
+      "production_price_forecast_method": "constant",
+      "photovoltaic_production_sell_price": 0.1419,
+      "prediction_horizon": 10,
+      "soc_init": 0.5,
+      "soc_final": 0.6,
+      "alpha": 1,
+      "beta": 0,
+      "maximum_power_from_grid": 2500,
+      "maximum_power_to_grid": 10000,
+      "set_use_pv": true,
+      "set_use_adjusted_pv": true,
+      "adjusted_pv_regression_model": "LassoRegression",
+      "adjusted_pv_solar_elevation_threshold": 10,
+      "compute_curtailment": true,
+      "set_use_battery": true,
+      "open_meteo_cache_max_age": 30,
+      "pv_power_forecast_method": "pvlib",
+      "use_multiprocessing": true,
+      "save_results": true
+    },
+    "plant_conf": {
+      "P_grid_max": 2500.0,
+      "P_from_grid_max": 2500.0,
+      "latitude": 51.1765913,
+      "longitude": 3.8660901,
+      "timezone": "Europe/Brussels",
+      "module_model": ["CSUN_Eurasia_Energy_Systems_CSUN295_60M"],
+      "inverter_model": ["Fronius_International_GmbH__Fronius_Primo_3_0_1_208_240__240V_"],
+      "surface_tilt": [30],
+      "surface_azimuth": [205],
+      "modules_per_string": [16],
+      "strings_per_inverter": [1],
+      "pv_systems": [
+        {
+          "name": "Array1_E_Vikram",
+          "surface_azimuth": 82,
+          "surface_tilt": 25,
+          "module_power": 270,
+          "modules_per_string": 9,
+          "strings": 1,
+          "inverter_power": 3000
+        },
+        {
+          "name": "Array1_W_Vikram",
+          "surface_azimuth": 262,
+          "surface_tilt": 25,
+          "module_power": 270,
+          "modules_per_string": 10,
+          "strings": 1,
+          "inverter_power": 3000
+        },
+        {
+          "name": "Array2_S_Aiko",
+          "surface_azimuth": 172,
+          "surface_tilt": 15,
+          "module_power": 460,
+          "modules_per_string": 2,
+          "strings": 1,
+          "inverter_power": 800
+        },
+        {
+          "name": "Array3_E_Aiko",
+          "surface_azimuth": 82,
+          "surface_tilt": 15,
+          "module_power": 460,
+          "modules_per_string": 2,
+          "strings": 1,
+          "inverter_power": 800
+        },
+        {
+          "name": "Array4_W_Aiko",
+          "surface_azimuth": 262,
+          "surface_tilt": 15,
+          "module_power": 460,
+          "modules_per_string": 2,
+          "strings": 1,
+          "inverter_power": 800
+        }
+      ],
+      "Pd_max": 3700.0,
+      "Pc_max": 3700.0,
+      "eta_disch": 0.95,
+      "eta_ch": 0.95,
+      "Enom": 19200.0,
+      "SOCmin": 0.05,
+      "SOCmax": 1.0,
+      "SOCtarget": 0.50,
+      "inverter_is_hybrid": false
+    },
+    "ev_conf": {
+      "number_of_ev_loads": 1,
+      "ev_battery_capacity": [77000],
+      "ev_charging_efficiency": [0.9],
+      "ev_nominal_charging_power": [4600],
+      "ev_minimum_charging_power": [1380],
+      "ev_consumption_efficiency": [0.15]
+    }
+  }
+}

@@ -12,23 +12,23 @@ PARAM_DEFS=$(find /app -name "param_definitions.json" | head -1)
 
 if [ -n "$PARAM_DEFS" ]; then
     echo "📁 Found parameter definitions: $PARAM_DEFS"
-    
+
     # Create backup
     if [ ! -f "$PARAM_DEFS.original" ]; then
         cp "$PARAM_DEFS" "$PARAM_DEFS.original"
         echo "💾 Created backup of original param_definitions.json"
     fi
-    
+
     echo "🔧 Adding EV parameter definitions..."
-    
+
     # Check if EV section already exists
     if ! grep -q "Electric Vehicle (EV)" "$PARAM_DEFS"; then
         # Restore from backup to ensure clean state
         cp "$PARAM_DEFS.original" "$PARAM_DEFS"
-        
-        # Use a more reliable approach: extract everything before the final } 
+
+        # Use a more reliable approach: extract everything before the final }
         # and append our EV section properly
-        
+
         # Create the complete EV section with proper JSON syntax
         cat > /tmp/ev_section.json << 'EOF'
 ,
@@ -77,24 +77,24 @@ if [ -n "$PARAM_DEFS" ]; then
     }
   }
 EOF
-        
+
         # Remove the last closing brace from the original file
         head -n -1 "$PARAM_DEFS" > /tmp/param_defs_without_closing.json
-        
+
         # Append our EV section
         cat /tmp/param_defs_without_closing.json /tmp/ev_section.json > /tmp/param_defs_new.json
-        
+
         # Add the final closing brace
         echo "}" >> /tmp/param_defs_new.json
-        
+
         # Replace the original file
         mv /tmp/param_defs_new.json "$PARAM_DEFS"
-        
+
         echo "✅ EV parameter definitions added to param_definitions.json"
     else
         echo "ℹ️ EV definitions already exist in param_definitions.json"
     fi
-    
+
 else
     echo "❌ Could not find param_definitions.json"
     exit 1
