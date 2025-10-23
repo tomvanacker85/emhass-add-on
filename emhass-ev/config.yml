@@ -1,7 +1,7 @@
 name: "EMHASS EV Extension"
 description: "Energy Management for Home Assistant with EV Charging Optimization"
 url: https://github.com/tomvanacker85/emhass
-version: v1.0.5
+version: v1.0.6
 slug: emhass-ev
 arch:
   - aarch64
