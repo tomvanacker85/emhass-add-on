@@ -1,15 +1,15 @@
 name: "EMHASS EV Extension"
 description: "Energy Management for Home Assistant with EV Charging Optimization"
 url: https://github.com/tomvanacker85/emhass
-version: v1.0.6
+version: v1.0.7
 slug: emhass-ev
 arch:
   - aarch64
   - amd64
   - armhf
   - armv7
-# Temporary: Use original EMHASS image until EV-specific image is built
-image: "ghcr.io/davidusb-geek/emhass:latest"
+# Use original EMHASS image as base for EV functionality
+image: "ghcr.io/davidusb-geek/emhass"
 ports:
   5003/tcp: 5003 # Different port to avoid conflicts (5000=original, 5001=enhanced, 5003=EV)
 ports_description:
