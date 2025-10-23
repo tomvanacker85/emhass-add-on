@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 
 # Set environment variables
 ENV PYTHONPATH="/app/src"
-ENV EMHASS_PORT="5001"
+ENV EMHASS_PORT="5003"
 
 # Create app directory
 WORKDIR /app

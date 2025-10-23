@@ -23,7 +23,7 @@ if [ -f "/data/options.json" ]; then
 fi
 
 # Set default port if not specified
-export EMHASS_PORT="${EMHASS_PORT:-5001}"
+export EMHASS_PORT="${EMHASS_PORT:-5003}"
 
 echo "🔧 Configuration loaded"
 echo "📡 Port: ${EMHASS_PORT}"

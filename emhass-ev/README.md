@@ -30,7 +30,7 @@ This add-on provides **EMHASS (Energy Management for Home Assistant) with EV Cha
 1. Install the add-on
 2. Configure your EV parameters
 3. Start the add-on
-4. Access the web interface at port 5001
+4. Access the web interface at port 5003
 
 ### EV Configuration Example
 
@@ -40,7 +40,25 @@ ev_battery_capacity: "[60000]" # 60 kWh = 60,000 Wh
 ev_charging_efficiency: "[0.9]" # 90% charging efficiency
 ev_nominal_charging_power: "[7400]" # 7.4 kW charger
 ev_minimum_charging_power: "[1380]" # 1.38 kW minimum power
+ev_consumption_efficiency: "[20.0]" # 20 kWh/100km (more intuitive!)
 ```
+
+### 🆕 **Km-based Energy Planning**
+
+The EV extension now supports **distance-based energy forecasting**, making it much easier to plan charging:
+
+```json
+{
+  "ev_distance_forecast": [
+    [0, 0, 0, 0, 0, 0, 25, 40, 60, 75, 50, 40, 25, 15, 10, 5, 0, 0, 0, 0, 0, 0, 0, 0]
+  ]
+}
+```
+
+Instead of calculating complex energy consumption in Watts, simply provide:
+- **Distance in km** for each time step
+- **Vehicle efficiency** in kWh/100km
+- The system automatically converts to energy consumption!
 
 ### Runtime Usage
 
@@ -63,7 +81,7 @@ Pass EV schedules via API calls:
 
 ## API Endpoints
 
-- **Web Interface**: `http://your-ha:5001`
+- **Web Interface**: `http://your-ha:5003`
 - **Day-ahead Optimization**: `POST /action/dayahead-optim`
 - **Perfect Forecast**: `POST /action/perfect-optim`
 
@@ -71,11 +89,12 @@ Pass EV schedules via API calls:
 
 This EV extension adds:
 
-- 5 new configuration parameters for EV setup
-- 3 new runtime parameters for dynamic EV control
+- 6 new configuration parameters for EV setup (including km-based consumption)
+- 4 new runtime parameters for dynamic EV control (including distance forecasting)
 - EV power variables in optimization (P_EV0, P_EV1, etc.)
 - EV SOC tracking (SOC_EV0, SOC_EV1, etc.)
 - Advanced constraints for availability and minimum SOC
+- **NEW**: Distance-based energy forecasting for intuitive EV planning
 
 ## Use Cases
 
@@ -110,4 +129,4 @@ This EV extension adds:
 3. Install and configure
 4. Start the add-on
 
-**Note**: This runs on port 5001 to avoid conflicts with standard EMHASS (port 5000).
+**Note**: This runs on port 5003 to avoid conflicts with standard EMHASS (port 5000) and enhanced EMHASS (port 5001).
