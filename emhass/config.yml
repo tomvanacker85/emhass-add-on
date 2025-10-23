@@ -6,9 +6,9 @@ slug: emhass-enhanced
 arch:
   - aarch64
   - amd64
-  # - armhf
-  # - armv7
-image: "ghcr.io/davidusb-geek/emhass:latest" #use working original image
+  - armhf
+  - armv7
+image: "ghcr.io/davidusb-geek/emhass" #use working original image base
 ports:
   5001/tcp: 5001
 ports_description:
@@ -18,12 +18,6 @@ map:
   - share:rw
 init: false
 hassio_role: default
-homeassistant_api: true
-ingress: true
-ingress_port: 5001
-ingress_stream: true
-panel_icon: mdi:home-lightning-bolt-outline
-panel_title: EMHASS
 schema:
   hass_url: "str?" #optional
   long_lived_token: "password?" #optional
