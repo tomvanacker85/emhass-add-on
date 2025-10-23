@@ -1,5 +1,35 @@
 # EMHASS EV Extension Changelog
 
+## [v1.3.3] - 2025-10-24
+
+### Fixed
+- **Enhanced DST Handling**: Comprehensive solution for persistent `AmbiguousTimeError: 2025-10-26 02:00:00`
+  - Multi-layer DST fix strategy with fallback mechanisms
+  - Try-catch wrapper around problematic tz_localize calls with multiple fallback strategies
+  - Emergency DST fix for stubborn timezone transition cases
+  - Graceful degradation: system continues working even if DST handling fails
+
+### Added
+- **Emergency DST Fix Script**: `fix_dst_emergency.sh` for stubborn timezone transitions
+- **Enhanced Error Handling**: Multiple fallback strategies (NaT handling, UTC conversion, naive fallback)
+- **Comprehensive Logging**: Clear feedback about which DST fix method succeeded
+- **Advanced Pattern Matching**: Enhanced shell script with improved regex patterns
+
+### Technical Details
+- **4-Layer Fallback Strategy**: Standard DST → NaT handling → UTC conversion → naive fallback
+- **Robust Pattern Matching**: Handles all tz_localize variations and edge cases
+- **Duplicate Parameter Cleanup**: Prevents parameter conflicts and duplication
+- **Debug Output**: Shows current tz_localize calls for troubleshooting
+- **Fail-Safe Operation**: EMHASS continues operating even if DST fixes partially fail
+
+### Files Modified
+- Enhanced `fix_dst_issues.sh` with advanced pattern matching
+- Enhanced `fix_dst_issues.py` with try-catch wrapper and fallbacks
+- Added `fix_dst_emergency.sh` for emergency DST handling
+- Updated startup sequence to apply all DST fix layers
+
+---
+
 ## [v1.3.2] - 2025-10-24
 
 ### Fixed

@@ -3,7 +3,7 @@ set -e
 
 # EMHASS EV Extension Run Script
 
-echo "🚗 Starting EMHASS EV Extension v1.3.2..."
+echo "🚗 Starting EMHASS EV Extension v1.3.3..."
 
 # Set up configuration paths for EV extension
 CONFIG_PATH="/share/emhass-ev"
