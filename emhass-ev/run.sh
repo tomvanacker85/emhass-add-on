@@ -41,8 +41,29 @@ fi
 
 # Apply DST fixes (PR601 equivalent) before starting EMHASS
 echo "🕐 Applying DST timezone fixes..."
-if [ -f "/app/fix_dst_issues.py" ]; then
-    python3 /app/fix_dst_issues.py
+
+# Try shell script version first (more reliable)
+if [ -f "/app/fix_dst_issues.sh" ]; then
+    echo "📍 Using shell script DST fix"
+    /app/fix_dst_issues.sh
+elif [ -f "/app/fix_dst_issues.py" ]; then
+    echo "📍 Using Python script DST fix"
+    # Use the virtual environment Python from EMHASS container
+    if [ -f "/app/.venv/bin/python" ]; then
+        echo "📍 Using venv Python: /app/.venv/bin/python"
+        /app/.venv/bin/python /app/fix_dst_issues.py
+    elif command -v uv >/dev/null 2>&1; then
+        echo "📍 Using uv run Python"
+        cd /app && uv run python fix_dst_issues.py
+    elif command -v python3 >/dev/null 2>&1; then
+        echo "📍 Using system Python3"
+        python3 /app/fix_dst_issues.py
+    else
+        echo "⚠️ Python not found - skipping Python DST fixes"
+    fi
+else
+    echo "⚠️ No DST fix scripts found"
+    echo "ℹ️ DST errors may occur during timezone transitions"
 fi
 
 # Set up EV web interface with enhanced form and YAML support
