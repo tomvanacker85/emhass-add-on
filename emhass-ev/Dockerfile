@@ -17,6 +17,7 @@ COPY ev_config_extension.js /app/ev_config_extension.js
 COPY ev_config_simple.js /app/ev_config_simple.js
 COPY ev_configuration.html /app/ev_configuration.html
 COPY setup_ev_enhanced.sh /app/setup_ev_enhanced.sh
+COPY fix_dst_issues.py /app/fix_dst_issues.py
 
 # Copy custom startup script
 COPY run.sh /run.sh

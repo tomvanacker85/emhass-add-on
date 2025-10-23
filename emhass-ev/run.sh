@@ -39,6 +39,18 @@ if [ ! -f "${CONFIG_PATH}/config.json" ]; then
     fi
 fi
 
+# Apply DST fixes (PR601 equivalent) before starting EMHASS
+echo "🕐 Applying DST timezone fixes..."
+if [ -f "/app/fix_dst_issues.py" ]; then
+    python3 /app/fix_dst_issues.py
+fi
+
+# Set up EV web interface with enhanced form and YAML support
+echo "🌐 Setting up Enhanced EV configuration..."
+if [ -f "/app/setup_ev_enhanced.sh" ]; then
+    chmod +x /app/setup_ev_enhanced.sh
+    /app/setup_ev_enhanced.sh
+fi
 
 echo "🔧 EV Extension configuration loaded"
 echo "📡 Port: ${EMHASS_PORT}"

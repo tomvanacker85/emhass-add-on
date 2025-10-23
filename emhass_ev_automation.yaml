@@ -1,0 +1,328 @@
+alias: EMHASS EV MPC Optimization
+description: Electric Vehicle charging optimization with EMHASS EV add-on
+triggers:
+  - trigger: time_pattern
+    minutes: /5
+conditions: []
+actions:
+  - data:
+      payload: >-
+        {"entity_save": true, "logging_level": "DEBUG",
+        "weather_forecast_cache_only": true, "maximum_power_from_grid":
+        {{maximum_power_from_grid}}, "load_cost_forecast":
+        {{load_cost_forecast}}, "prod_price_forecast": {{prod_price_forecast}},
+        "number_of_deferrable_loads": {{number_of_deferrable_loads}},
+        "nominal_power_of_deferrable_loads":
+        {{nominal_power_of_deferrable_loads}},
+        "minimum_power_of_deferrable_loads":
+        {{minimum_power_of_deferrable_loads}},
+        "operating_hours_of_each_deferrable_load":
+        {{operating_hours_of_each_deferrable_load}},
+        "start_timesteps_of_each_deferrable_load":
+        {{start_timesteps_of_each_deferrable_load}},
+          "end_timesteps_of_each_deferrable_load": {{end_timesteps_of_each_deferrable_load}}, 
+          "treat_deferrable_load_as_semi_cont": {{treat_deferrable_load_as_semi_cont}}, 
+          "set_deferrable_load_single_constant": {{set_deferrable_load_single_constant}}, 
+          "set_deferrable_startup_penalty": {{set_deferrable_startup_penalty}},
+          "def_current_state": {{def_current_state}},
+          "soc_init": {{soc_init}}, "soc_target": {{soc_target}}, "prediction_horizon": {{prediction_horizon}},
+          "set_use_adjusted_pv": {{set_use_adjusted_pv}}, "historic_days_to_retrieve": {{historic_days_to_retrieve}}, "compute_curtailment": "{{ states('automation.curtailment')|bool }}", 
+          "load_forecast_method": "{{load_forecast_method}}", "publish_prefix": "{{publish_prefix}}", "alpha": 0.25, "beta": 0.75,
+          "set_use_ev": true, "number_of_ev_loads": 1,
+          "ev_battery_capacity": {{ev_battery_capacity}},
+          "ev_charging_efficiency": {{ev_charging_efficiency}},
+          "ev_nominal_charging_power": {{ev_nominal_charging_power}},
+          "ev_minimum_charging_power": {{ev_minimum_charging_power}},
+          "ev_consumption_efficiency": {{ev_consumption_efficiency}},
+          "ev_availability": {{ev_availability}},
+          "ev_minimum_soc_schedule": {{ev_minimum_soc_schedule}},
+          "ev_initial_soc": {{ev_initial_soc}},
+          "ev_distance_forecast": {{ev_distance_forecast}}}
+    action: shell_command.emhass_ev_naive_mpc
+    continue_on_error: true
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 30
+      milliseconds: 0
+  - action: shell_command.emhass_ev_publish_data
+    metadata: {}
+    data: {}
+    enabled: true
+  - action: script.phev_socket_obv_emhass_ev
+    metadata: {}
+    data: {}
+    enabled: false
+  - action: script.nexxtender_obv_emhass_ev
+    metadata: {}
+    data: {}
+    enabled: true
+mode: single
+variables:
+  prediction_horizon: 48
+  optimization_time_step: 60
+  load_cost_forecast: >
+    {% set prices_today =
+    state_attr('sensor.ecopower_consumption_average_electricity_price',
+    'prices_today') | map(attribute='price') | list %}    {% set prices_tomorrow
+    = state_attr('sensor.ecopower_consumption_average_electricity_price',
+    'prices_tomorrow') | map(attribute='price') | list %}    {% set
+    prices_to_use =  prices_tomorrow if prices_tomorrow | length > 0 else
+    prices_today %}  {% set final_list = (prices_today + prices_tomorrow) %} {%
+    set final_list = final_list + prices_to_use + prices_to_use + prices_to_use
+    + prices_to_use + prices_to_use + prices_to_use + prices_to_use +
+    prices_to_use + prices_to_use %} {{
+    final_list[now().hour:][:(prediction_horizon)]  }}
+  prod_price_forecast: >
+    {% set prices_today =
+    state_attr('sensor.ecopower_injection_average_electricity_price',
+    'prices_today') | map(attribute='price') | list %}    {% set prices_tomorrow
+    = state_attr('sensor.ecopower_injection_average_electricity_price',
+    'prices_tomorrow') | map(attribute='price') | list %}    {% set
+    prices_to_use =  prices_tomorrow if prices_tomorrow | length > 0 else
+    prices_today %}  {% set final_list = (prices_today + prices_tomorrow) %} {%
+    set final_list = final_list + prices_to_use + prices_to_use + prices_to_use
+    + prices_to_use + prices_to_use + prices_to_use + prices_to_use +
+    prices_to_use + prices_to_use %} {{
+    final_list[now().hour:][:(prediction_horizon)]  }}
+  soc_init: |
+    {{ (states('sensor.battery_soc')|int(50)) / 100 }}
+  soc_target: 0.5
+  set_use_adjusted_pv: "true"
+  number_of_deferrable_loads: "{{ states('input_number.number_of_deferrable_loads')|int(0) }}"
+  nominal_power_of_deferrable_loads: >
+    {{ [ states('input_number.deferrable0_nominal_power')|int(0) ,
+    states('input_number.deferrable1_nominal_power')|int(0),
+    states('input_number.deferrable2_nominal_power')|int(0),
+    states('input_number.deferrable3_nominal_power')|int(0),
+    states('input_number.deferrable4_nominal_power')|int(0),
+    states('input_number.deferrable5_nominal_power')|int(0) ,
+    states('input_number.deferrable6_nominal_power')|int(0) ,
+    states('input_number.deferrable7_nominal_power')|int(0) ,
+    states('input_number.deferrable8_nominal_power')|int(0) ,
+    states('input_number.deferrable9_nominal_power')|int(0) ,
+    states('input_number.deferrable10_nominal_power')|int(0)
+    ][:number_of_deferrable_loads] }}
+  minimum_power_of_deferrable_loads: >
+    {{ [ states('input_number.deferrable0_minimal_power')|int(0) ,
+    states('input_number.deferrable1_minimal_power')|int(0),
+    states('input_number.deferrable2_minimal_power')|int(0),
+    states('input_number.deferrable3_minimal_power')|int(0),
+    states('input_number.deferrable4_minimal_power')|int(0),
+    states('input_number.deferrable5_minimal_power')|int(0),
+    states('input_number.deferrable6_minimal_power')|int(0),
+    states('input_number.deferrable7_minimal_power')|int(0),
+    states('input_number.deferrable8_minimal_power')|int(0),
+    states('input_number.deferrable9_minimal_power')|int(0),
+    states('input_number.deferrable10_minimal_power')|int(0)
+    ][:number_of_deferrable_loads] }}
+  start_timesteps_of_each_deferrable_load: >
+    {{ [ states('input_number.deferrable0_start_timestep')|int(0) ,
+    states('input_number.deferrable1_start_timestep')|int(0),
+    states('input_number.deferrable2_start_timestep')|int(0),
+    states('input_number.deferrable3_start_timestep')|int(0),
+    states('input_number.deferrable4_start_timestep')|int(0),
+    states('input_number.deferrable5_start_timestep')|int(0),
+    states('input_number.deferrable6_start_timestep')|int(0),
+    states('input_number.deferrable7_start_timestep')|int(0),
+    states('input_number.deferrable8_start_timestep')|int(0),
+    states('input_number.deferrable9_start_timestep')|int(0),
+    states('input_number.deferrable10_start_timestep')|int(0)
+    ][:number_of_deferrable_loads] }}
+  end_timesteps_of_each_deferrable_load: >
+    {{ [ states('input_number.deferrable0_end_timestep')|int(0) ,
+    states('input_number.deferrable1_end_timestep')|int(0),
+    states('input_number.deferrable2_end_timestep')|int(0),
+    states('input_number.deferrable3_end_timestep')|int(0),
+    states('input_number.deferrable4_end_timestep')|int(0),
+    states('input_number.deferrable5_end_timestep')|int(0),
+    states('input_number.deferrable6_end_timestep')|int(0),
+    states('input_number.deferrable7_end_timestep')|int(0),
+    states('input_number.deferrable8_end_timestep')|int(0),
+    states('input_number.deferrable9_end_timestep')|int(0),
+    states('input_number.deferrable10_end_timestep')|int(0)
+    ][:number_of_deferrable_loads] }}
+  operating_hours_of_each_deferrable_load: >
+    {{ [ states('input_number.deferrable0_operating_hours')|int(0) ,
+    states('input_number.deferrable1_operating_hours')|int(0),
+    states('input_number.deferrable2_operating_hours')|int(0),
+    states('input_number.deferrable3_operating_hours')|int(0),
+    states('input_number.deferrable4_operating_hours')|int(0),
+    states('input_number.deferrable5_operating_hours')|int(0),
+    states('input_number.deferrable6_operating_hours')|int(0),
+    states('input_number.deferrable7_operating_hours')|int(0),
+    states('input_number.deferrable8_operating_hours')|int(0),
+    states('input_number.deferrable9_operating_hours')|int(0),
+    states('input_number.deferrable10_operating_hours')|int(0)
+    ][:number_of_deferrable_loads] }}
+  treat_deferrable_load_as_semi_cont: >
+    {{ [ states('input_boolean.deferrable0_semi_cont')|bool(false) | string() |
+    lower, states('input_boolean.deferrable1_semi_cont')|bool(false) | string()
+    | lower, states('input_boolean.deferrable2_semi_cont')|bool(false) |
+    string() | lower, states('input_boolean.deferrable3_semi_cont')|bool(false)
+    | string() | lower,
+    states('input_boolean.deferrable4_semi_cont')|bool(false) | string() |
+    lower, states('input_boolean.deferrable5_semi_cont')|bool(false) | string()
+    | lower, states('input_boolean.deferrable6_semi_cont')|bool(false) |
+    string() | lower, states('input_boolean.deferrable7_semi_cont')|bool(false)
+    | string() | lower,
+    states('input_boolean.deferrable8_semi_cont')|bool(false) | string() |
+    lower, states('input_boolean.deferrable9_semi_cont')|bool(false) | string()
+    | lower, states('input_boolean.deferrable10_semi_cont')|bool(false) |
+    string() | lower ][:number_of_deferrable_loads] }}
+  set_deferrable_load_single_constant: >
+    {{ [ states('input_boolean.deferrable0_single_constant')|bool(false) |
+    string() | lower,
+    states('input_boolean.deferrable1_single_constant')|bool(false) | string() |
+    lower, states('input_boolean.deferrable2_single_constant')|bool(false) |
+    string() | lower,
+    states('input_boolean.deferrable3_single_constant')|bool(false) | string() |
+    lower, states('input_boolean.deferrable4_single_constant')|bool(false) |
+    string() | lower,
+    states('input_boolean.deferrable5_single_constant')|bool(false) | string() |
+    lower, states('input_boolean.deferrable6_single_constant')|bool(false) |
+    string() | lower,
+    states('input_boolean.deferrable7_single_constant')|bool(false) | string() |
+    lower, states('input_boolean.deferrable8_single_constant')|bool(false) |
+    string() | lower,
+    states('input_boolean.deferrable9_single_constant')|bool(false) | string() |
+    lower, states('input_boolean.deferrable10_single_constant')|bool(false) |
+    string() | lower ][:number_of_deferrable_loads] }}
+  set_deferrable_startup_penalty: >
+    {{ [ states('input_number.deferrable0_startup_penalty')|float(0.0),
+    states('input_number.deferrable1_startup_penalty')|float(0.0),
+    states('input_number.deferrable2_startup_penalty')|float(0.0),
+    states('input_number.deferrable3_startup_penalty')|float(0.0),
+    states('input_number.deferrable4_startup_penalty')|float(0.0),
+    states('input_number.deferrable5_startup_penalty')|float(0.0),
+    states('input_number.deferrable6_startup_penalty')|float(0.0),
+    states('input_number.deferrable7_startup_penalty')|float(0.0),
+    states('input_number.deferrable8_startup_penalty')|float(0.0),
+    states('input_number.deferrable9_startup_penalty')|float(0.0),
+    states('input_number.deferrable10_startup_penalty')|float(0.0)
+    ][:number_of_deferrable_loads] }}
+  state: |
+    {{ states('sensor.nexxtender_discriminator_2') == "Charging" }}
+  def_current_state: >
+    {{ [ state|string|lower , "false", "false", "false", "false", "false",
+    "false", "false", "false", "false", "false"][:number_of_deferrable_loads]}}
+  historic_days_to_retrieve: 9
+  publish_prefix: ""
+  maximum_power_from_grid: |
+    {{ max(2500,
+        states('sensor.p1_meter_peak_demand_current_month')|int(0) -100) }}
+  load_forecast_method: naive
+  load_power_forecast: |
+    {{ [450]*prediction_horizon }}
+
+  # ====================================================================================
+  # ============================= EV PARAMETERS ======================================
+  # ====================================================================================
+  
+  # EV Battery Configuration
+  ev_battery_capacity: |
+    {{ [states('input_number.ev_battery_capacity')|int(77000)] }}
+  ev_charging_efficiency: |
+    {{ [states('input_number.ev_charging_efficiency')|float(0.9)] }}
+  ev_nominal_charging_power: |
+    {{ [states('input_number.ev_nominal_charging_power')|int(4600)] }}
+  ev_minimum_charging_power: |
+    {{ [states('input_number.ev_minimum_charging_power')|int(1380)] }}
+  ev_consumption_efficiency: |
+    {{ [states('input_number.ev_consumption_efficiency')|float(0.15)] }}
+
+  # EV Initial State
+  ev_initial_soc: |
+    {{ [states('sensor.ev_battery_soc')|float(0.2)] }}
+
+  # EV Availability Schedule (48 hours)
+  # 1 = EV connected and available for charging
+  # 0 = EV not connected (driving or away)
+  ev_availability: >
+    {% set current_hour = now().hour %}
+    {% set ev_connected = states('binary_sensor.ev_connected')|bool(true) %}
+    {% set work_departure = states('input_datetime.ev_work_departure').split(':') %}
+    {% set work_return = states('input_datetime.ev_work_return').split(':') %}
+    {% set departure_hour = work_departure[0]|int(7) %}
+    {% set return_hour = work_return[0]|int(18) %}
+    {% set weekend = now().weekday() >= 5 %}
+    {% set availability = [] %}
+    {% for i in range(prediction_horizon) %}
+      {% set hour = (current_hour + i) % 24 %}
+      {% set day_offset = (current_hour + i) // 24 %}
+      {% set is_weekend = (now().weekday() + day_offset) % 7 >= 5 %}
+      {% if is_weekend %}
+        {% set connected = 1 %}
+      {% elif hour >= departure_hour and hour < return_hour %}
+        {% set connected = 0 %}
+      {% else %}
+        {% set connected = 1 %}
+      {% endif %}
+      {% set _ = availability.append(connected) %}
+    {% endfor %}
+    {{ [availability] }}
+
+  # EV Minimum SOC Schedule (48 hours)
+  # Minimum required SOC at each time step
+  ev_minimum_soc_schedule: >
+    {% set current_hour = now().hour %}
+    {% set work_departure = states('input_datetime.ev_work_departure').split(':') %}
+    {% set work_return = states('input_datetime.ev_work_return').split(':') %}
+    {% set departure_hour = work_departure[0]|int(7) %}
+    {% set return_hour = work_return[0]|int(18) %}
+    {% set daily_km = states('input_number.ev_daily_commute_km')|int(50) %}
+    {% set ev_efficiency = states('input_number.ev_consumption_efficiency')|float(0.15) %}
+    {% set ev_capacity = states('input_number.ev_battery_capacity')|int(77000) %}
+    {% set commute_energy = daily_km * ev_efficiency * 1000 %}
+    {% set commute_soc = commute_energy / ev_capacity %}
+    {% set base_soc = states('input_number.ev_minimum_soc')|float(0.2) %}
+    {% set required_soc = base_soc + commute_soc %}
+    {% set min_soc_schedule = [] %}
+    {% for i in range(prediction_horizon) %}
+      {% set hour = (current_hour + i) % 24 %}
+      {% set day_offset = (current_hour + i) // 24 %}
+      {% set is_weekend = (now().weekday() + day_offset) % 7 >= 5 %}
+      {% if is_weekend %}
+        {% set min_soc = base_soc %}
+      {% elif hour < departure_hour %}
+        {% set min_soc = required_soc %}
+      {% else %}
+        {% set min_soc = base_soc %}
+      {% endif %}
+      {% set _ = min_soc_schedule.append(min_soc) %}
+    {% endfor %}
+    {{ [min_soc_schedule] }}
+
+  # EV Distance Forecast (48 hours)
+  # Expected driving distance (km) for each time step
+  ev_distance_forecast: >
+    {% set current_hour = now().hour %}
+    {% set work_departure = states('input_datetime.ev_work_departure').split(':') %}
+    {% set work_return = states('input_datetime.ev_work_return').split(':') %}
+    {% set departure_hour = work_departure[0]|int(7) %}
+    {% set return_hour = work_return[0]|int(18) %}
+    {% set daily_km = states('input_number.ev_daily_commute_km')|int(50) %}
+    {% set weekend_km = states('input_number.ev_weekend_km')|int(20) %}
+    {% set distance_schedule = [] %}
+    {% for i in range(prediction_horizon) %}
+      {% set hour = (current_hour + i) % 24 %}
+      {% set day_offset = (current_hour + i) // 24 %}
+      {% set is_weekend = (now().weekday() + day_offset) % 7 >= 5 %}
+      {% if is_weekend %}
+        {% if hour == 10 %}
+          {% set distance = weekend_km / 2 %}
+        {% elif hour == 16 %}
+          {% set distance = weekend_km / 2 %}
+        {% else %}
+          {% set distance = 0 %}
+        {% endif %}
+      {% elif hour == departure_hour %}
+        {% set distance = daily_km / 2 %}
+      {% elif hour == return_hour %}
+        {% set distance = daily_km / 2 %}
+      {% else %}
+        {% set distance = 0 %}
+      {% endif %}
+      {% set _ = distance_schedule.append(distance) %}
+    {% endfor %}
+    {{ [distance_schedule] }}
