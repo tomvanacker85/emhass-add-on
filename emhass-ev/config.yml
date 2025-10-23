@@ -6,7 +6,7 @@ slug: emhass-ev
 arch:
   - aarch64
   - amd64
-image: "ghcr.io/tomvanacker85/emhass-ev" # Your custom image
+image: "ghcr.io/tomvanacker85/emhass-ev:v1.0.4"
 ports:
   5003/tcp: 5003 # Different port to avoid conflicts (5000=original, 5001=enhanced, 5003=EV)
 ports_description:
