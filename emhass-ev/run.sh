@@ -34,4 +34,22 @@ echo "📁 Config path: ${CONFIG_PATH}"
 
 # Start EMHASS with EV extension
 echo "🚀 Starting EMHASS EV web server..."
-exec python3 -m emhass.web_server --port "${EMHASS_PORT}"
+
+# Try to find the correct Python executable
+if command -v python3 >/dev/null 2>&1; then
+    echo "Using python3"
+    exec python3 -m emhass.web_server --port "${EMHASS_PORT}"
+elif command -v python >/dev/null 2>&1; then
+    echo "Using python"
+    exec python -m emhass.web_server --port "${EMHASS_PORT}"
+elif command -v /usr/local/bin/python3 >/dev/null 2>&1; then
+    echo "Using /usr/local/bin/python3"
+    exec /usr/local/bin/python3 -m emhass.web_server --port "${EMHASS_PORT}"
+else
+    echo "🔍 Searching for Python executable..."
+    find /usr -name "python*" -type f 2>/dev/null | head -5
+    echo "Available in PATH:"
+    which python python3 2>/dev/null || echo "No python found in PATH"
+    echo "❌ No Python executable found!"
+    exit 1
+fi
