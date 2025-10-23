@@ -43,10 +43,27 @@ elif [ -f "/app/run.sh" ]; then
     echo "Using app run script"
     exec /app/run.sh
 else
-    # Fallback: try to start EMHASS directly
+    # Fallback: try to start EMHASS directly with various methods
     echo "Starting EMHASS directly..."
-    cd /app 2>/dev/null || cd /
-    exec emhass --action web-server --port "${EMHASS_PORT}" 2>/dev/null || \
-    exec /usr/local/bin/emhass --action web-server --port "${EMHASS_PORT}" 2>/dev/null || \
-    echo "❌ Could not start EMHASS web server"
+    
+    # Check what's available
+    echo "🔍 Available EMHASS executables:"
+    find /usr -name "*emhass*" -type f 2>/dev/null | head -3
+    find /app -name "*emhass*" -type f 2>/dev/null | head -3
+    
+    # Try different startup methods
+    if [ -f "/usr/local/bin/python3" ]; then
+        echo "Trying Python3 module execution..."
+        cd /app 2>/dev/null || cd /
+        exec /usr/local/bin/python3 -m emhass.web_server --port "${EMHASS_PORT}"
+    elif [ -f "/usr/bin/python3" ]; then
+        echo "Trying system Python3..."
+        cd /app 2>/dev/null || cd /
+        exec /usr/bin/python3 -m emhass.web_server --port "${EMHASS_PORT}"
+    else
+        echo "❌ Could not find Python3 to start EMHASS"
+        echo "Available Python executables:"
+        find /usr -name "python*" -executable -type f 2>/dev/null
+        exit 1
+    fi
 fi
