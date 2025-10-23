@@ -39,12 +39,6 @@ if [ ! -f "${CONFIG_PATH}/config.json" ]; then
     fi
 fi
 
-# Set up EV web interface with enhanced form and YAML support
-echo "🌐 Setting up Enhanced EV configuration..."
-if [ -f "/app/setup_ev_enhanced.sh" ]; then
-    chmod +x /app/setup_ev_enhanced.sh
-    /app/setup_ev_enhanced.sh
-fi
 
 echo "🔧 EV Extension configuration loaded"
 echo "📡 Port: ${EMHASS_PORT}"
