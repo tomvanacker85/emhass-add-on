@@ -1,7 +1,7 @@
 name: "EMHASS Enhanced"
 description: "Energy Management for Home Assistant - Enhanced Version"
 url: https://github.com/tomvanacker85/emhass-add-on
-version: v0.13.5-enhanced #using original base with enhancements
+version: v0.13.6-enhanced #force reload
 slug: emhass-enhanced
 arch:
   - aarch64
