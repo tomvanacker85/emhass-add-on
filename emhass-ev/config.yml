@@ -1,7 +1,7 @@
 name: "EMHASS EV Extension"
 description: "Energy Management for Home Assistant with EV Charging Optimization"
 url: https://github.com/tomvanacker85/emhass-ev
-version: v1.1.0
+version: v1.1.1
 slug: emhass-ev
 arch:
   - aarch64
@@ -19,6 +19,11 @@ map:
   - share:rw
 init: false
 hassio_role: default
+homeassistant_api: true
+ingress: true
+ingress_port: 5003
+panel_icon: mdi:car-electric
+panel_title: EMHASS EV
 environment:
   EMHASS_PORT: "5003"
   EMHASS_LOG_LEVEL: "INFO"
