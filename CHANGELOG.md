@@ -1,5 +1,27 @@
 # EMHASS EV Extension Changelog
 
+## [v1.3.2] - 2025-10-24
+
+### Fixed
+- **Python Path Issue**: Resolved `/run.sh: line 45: python3: command not found` error
+  - Added shell script version of DST fix (`fix_dst_issues.sh`) as primary method
+  - Improved execution path detection for Python in EMHASS container
+  - Added fallback mechanisms: shell script → venv python → uv run → system python
+  - Better error reporting and troubleshooting information
+
+### Added
+- **Shell Script DST Fix**: Pure bash implementation that doesn't require Python
+- **Multiple Execution Paths**: Robust handling of different container Python setups
+- **Enhanced Logging**: Clear feedback about which DST fix method is being used
+
+### Technical Details
+- Shell script uses `sed` for reliable text replacement without Python dependencies
+- Handles EMHASS container's `uv` virtual environment setup
+- Maintains compatibility with all Python environment configurations
+- Includes verification and backup creation in both Python and shell versions
+
+---
+
 ## [v1.3.1] - 2025-10-24
 
 ### Fixed
