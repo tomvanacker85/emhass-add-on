@@ -1,52 +1,19 @@
-# EMHASS EV Extension Add-on Dockerfile
-# Builds from tomvanacker85/emhass fork with EV charging extension
+# EMHASS EV Extension Add-on
+# Uses the original EMHASS image and adds EV functionality via configuration
 
-ARG BUILD_FROM
-FROM ${BUILD_FROM}
+# Start from the working original EMHASS image  
+FROM ghcr.io/davidusb-geek/emhass:latest
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    build-essential \
-    python3 \
-    python3-pip \
-    python3-dev \
-    coinor-cbc \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set environment variables
-ENV PYTHONPATH="/app/src"
+# Set environment variables for EV extension
 ENV EMHASS_PORT="5003"
+ENV EMHASS_CONFIG_PATH="/share/emhass-ev"
+ENV EMHASS_DATA_PATH="/share/emhass-ev"
 
-# Create app directory
-WORKDIR /app
+# Copy our custom run script
+COPY run.sh /run.sh
+RUN chmod +x /run.sh
 
-# Clone your EV-enhanced EMHASS fork
-RUN git clone --branch feature/ev-charging-extension \
-    https://github.com/tomvanacker85/emhass.git /app/emhass-source
+# The EV functionality will be handled via configuration and API calls
+# This allows us to use the stable base image while adding EV capabilities
 
-# Install Python dependencies
-COPY requirements.txt /tmp/requirements.txt
-RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
-
-# Install EMHASS with EV extension
-RUN cd /app/emhass-source && \
-    pip3 install --no-cache-dir -e .
-
-# Copy run script
-COPY run.sh /app/run.sh
-RUN chmod +x /app/run.sh
-
-# Create data directories
-RUN mkdir -p /share/emhass-ev /config /data
-
-# Expose port
-EXPOSE 5001
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:5001/ || exit 1
-
-# Run EMHASS
-CMD ["/app/run.sh"]
+ENTRYPOINT ["/run.sh"]
