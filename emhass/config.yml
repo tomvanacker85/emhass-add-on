@@ -8,7 +8,8 @@ arch:
   - amd64
   - armhf
   - armv7
-image: "ghcr.io/tomvanacker85/emhass:latest" #use your enhanced image
+# Build from your enhanced EMHASS repository
+# image: Will be built from Dockerfile
 ports:
   5001/tcp: 5001
 ports_description:
