@@ -1,5 +1,31 @@
 # EMHASS EV Extension Changelog
 
+# Changelog
+
+## [v1.3.4] - 2025-10-24
+
+### 🔧 Fixed
+- **Critical**: Fixed "cannot reindex on an axis with duplicate labels" error during DST transitions
+- **Enhancement**: Added comprehensive NaT (Not a Time) value handling and cleanup
+- **Improvement**: Enhanced reindex operations with duplicate label detection and cleanup
+- **Reliability**: Added `fix_dst_nat_issues.py` script for robust pandas reindex error handling
+- **Fallback**: Implemented graceful degradation for weather forecast reindex failures
+- **Prevention**: Added utility functions to clean NaT values and duplicates from datetime indexes
+
+### 🚀 Technical Improvements
+- **NaT Handling**: Prevents creation of NaT values in tz_localize operations
+- **Duplicate Cleanup**: Automatic detection and removal of duplicate timestamps
+- **Error Recovery**: Robust fallback mechanisms for reindex operations
+- **Data Integrity**: Enhanced data validation and cleanup for DST transitions
+- **Container Integration**: Multi-layer DST fix application with NaT prevention
+- **Weather Forecast**: Specific fixes for weather data reindex operations during DST
+
+### 📦 Container Updates
+- **Scripts**: Added `fix_dst_nat_issues.py` to Docker container
+- **Startup**: Enhanced run.sh with NaT fix application
+- **Reliability**: 5-layer DST fix strategy (shell → python → emergency → NaT → cleanup)
+- **Error Handling**: Comprehensive error handling for all DST-related operations
+
 ## [v1.3.3] - 2025-10-24
 
 ### Fixed

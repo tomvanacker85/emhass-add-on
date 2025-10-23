@@ -20,6 +20,7 @@ COPY setup_ev_enhanced.sh /app/setup_ev_enhanced.sh
 COPY fix_dst_issues.py /app/fix_dst_issues.py
 COPY fix_dst_issues.sh /app/fix_dst_issues.sh
 COPY fix_dst_emergency.sh /app/fix_dst_emergency.sh
+COPY fix_dst_nat_issues.py /app/fix_dst_nat_issues.py
 
 # Copy custom startup script
 COPY run.sh /run.sh

@@ -3,7 +3,7 @@ set -e
 
 # EMHASS EV Extension Run Script
 
-echo "🚗 Starting EMHASS EV Extension v1.3.3..."
+echo "🚗 Starting EMHASS EV Extension v1.3.4..."
 
 # Set up configuration paths for EV extension
 CONFIG_PATH="/share/emhass-ev"
@@ -71,7 +71,19 @@ if [ -f "/app/fix_dst_emergency.sh" ]; then
     /app/fix_dst_emergency.sh
 fi
 
-echo "ℹ️ DST fixes complete - EMHASS should handle timezone transitions"
+# Apply NaT and duplicate index fix for reindex errors
+if [ -f "/app/fix_dst_nat_issues.py" ]; then
+    echo "🔧 Applying NaT and duplicate index fixes..."
+    if [ -f "/app/.venv/bin/python" ]; then
+        /app/.venv/bin/python /app/fix_dst_nat_issues.py
+    elif command -v python3 >/dev/null 2>&1; then
+        python3 /app/fix_dst_nat_issues.py
+    else
+        echo "⚠️ Python not found - skipping NaT fixes"
+    fi
+fi
+
+echo "ℹ️ All DST fixes complete - EMHASS should handle timezone transitions and reindex operations"
 
 # Set up EV web interface with enhanced form and YAML support
 echo "🌐 Setting up Enhanced EV configuration..."
